@@ -30,9 +30,18 @@ void CodeGenerator::compile(Node* ast) {
 
 			compile(ast->right);
 
-			outfile << endl << "call print" << endl;
-			outfile << "xor eax,eax" << endl;
-			outfile << "call print" << endl;
+			outfile << endl;
+			//outfile << "call print" << endl;
+
+			//*
+			outfile << "push eax" << endl;
+			outfile << "push message2" << endl;
+			outfile << "call printf" << endl;
+			outfile << "add esp,8" << endl;
+			//*/
+
+			//outfile << "xor eax,eax" << endl;
+			//outfile << "call print" << endl;
 			break;
 
 		case NodeType::ADD_N:
@@ -53,9 +62,13 @@ void CodeGenerator::compile(Node* ast) {
 			break;
 
 		case NodeType::PROG:
-			outfile << "global _start" << endl << endl;
+			outfile << "global _start" << endl;
+			outfile << "extern printf" << endl;
+			outfile << endl;
+
 			outfile << "section .data" << endl;
 			outfile << "message db 20" << endl;
+			outfile << "message2 db \"%d\",10,0" << endl;
 			outfile << "msg	db 0xa,\"123456789012345678901234567890123456789\", 0xa" << endl;
 			outfile << "len	equ $-msg " << endl;
 			outfile << endl;
@@ -67,7 +80,6 @@ void CodeGenerator::compile(Node* ast) {
 			compile(ast->left);
 
 			// exit
-			outfile << endl;
 			outfile << "xor eax,eax" << endl;
 			outfile << "inc eax" << endl;
 			outfile << "xor ebx, ebx" << endl;

@@ -26,5 +26,6 @@ clean:
 	rm -f output.o
 
 asm:
+	./main
 	nasm -f elf output.s
-	ld output.o -o a.out
+	ld -lc -melf_i386 -dynamic-linker /lib/ld-linux.so.2 output.o -o a.out
