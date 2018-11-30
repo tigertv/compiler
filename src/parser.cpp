@@ -119,14 +119,22 @@ Node* Parser::expression() {
 		node->value = "SET";
 		node->left = temp;
 		node->right = expression();
-	}
 
-	if (node->type == NodeType::NUMBER_C && token->type == TokenType::ADD) {
+	} else if (node->type == NodeType::NUMBER_C && token->type == TokenType::ADD) {
 		temp = node;
 		node = new Node();
 		node->type = NodeType::ADD_N;
 		nextToken();
 		node->value = "ADD";
+		node->left = temp;
+		node->right = expression();
+
+	} else if (node->type == NodeType::NUMBER_C && token->type == TokenType::SUB) {
+		temp = node;
+		node = new Node();
+		node->type = NodeType::SUB_N;
+		nextToken();
+		node->value = "SUB";
 		node->left = temp;
 		node->right = expression();
 	}

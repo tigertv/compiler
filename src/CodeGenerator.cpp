@@ -46,10 +46,15 @@ void CodeGenerator::compile(Node* ast) {
 
 		case NodeType::ADD_N:
 			compile(ast->left);
-			//outfile << " + ";
 			outfile << endl;
 			outfile << "add eax,";
+			compile(ast->right);
+			break;
 
+		case NodeType::SUB_N:
+			compile(ast->left);
+			outfile << endl;
+			outfile << "sub eax,";
 			compile(ast->right);
 			break;
 
