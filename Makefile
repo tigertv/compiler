@@ -25,7 +25,7 @@ clean:
 	rm -rf $(BIN_DIR) $(APP)
 	rm -f output.o
 
-asm:
-	./main
+asm: 
+	./main source.calc
 	nasm -f elf output.s
 	ld -lc -melf_i386 -dynamic-linker /lib/ld-linux.so.2 output.o -o a.out

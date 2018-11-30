@@ -29,9 +29,21 @@ void traverse(Node* node) {
 	if (node->right) traverse(node->right);
 }
 
-int main() {
+int main(int argc, char* argv[]) {
 	using namespace std;
-	string content = readFile("source.calc");
+
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " sourcefile.calc" << std::endl;
+        return 1;
+    }
+    // Print the user's name:
+
+	string content = readFile(argv[1]);
+	if (content.empty()) {
+		cout << "Error: bad filename or no content" << endl;
+		return 1;
+	}
+
 	cout << content;
 	cout << "===============================" << endl;
 
