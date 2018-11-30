@@ -1,4 +1,7 @@
 all/
 build/
 *.swp
+*.o
+*.s
+*.out
 main

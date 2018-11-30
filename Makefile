@@ -10,9 +10,9 @@ OBJ := $(SRC:.cpp=.o)
 OBJ := $(OBJ:$(SRC_DIR)/%=%)
 OBJ := $(addprefix $(BIN_DIR)/,$(OBJ))
 
-.PHONY: all clean
+.PHONY: all clean asm
 
-all: $(BIN_DIR) $(APP)
+all: $(BIN_DIR) $(APP) asm
 
 $(BIN_DIR): 
 	mkdir -p $(BIN_DIR)
@@ -23,3 +23,8 @@ $(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(FLAGS) -c $< -o $@
 clean:
 	rm -rf $(BIN_DIR) $(APP)
+	rm -f output.o
+
+asm:
+	nasm -f elf output.s
+	ld output.o -o a.out
