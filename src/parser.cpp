@@ -67,6 +67,30 @@ Node* Parser::statement() {
 		case TokenType::IF: 
 			std::cout << "if token" << std::endl;
 			break;
+			
+		case TokenType::PRINT: 
+			node = new Node();
+			node->type = NodeType::PRINT_N;
+
+			token = nextToken();
+			if (token->type != TokenType::LPAR) {
+				printError("A left parenthesis expected in print statement.");
+			}
+
+			nextToken();
+
+			node->left = expression();
+			token = getCurrentToken();
+			
+			if (token->type != TokenType::RPAR) {
+				printError("A right parenthesis expected in print statement.");
+			}
+
+			token = nextToken();
+			if (token->type != TokenType::SEMICOLON) {
+				printError("A semicolon expected in print statement.");
+			}
+			break;
 
 		case TokenType::WHILE:
 			break;

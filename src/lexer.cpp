@@ -25,6 +25,8 @@ void Lexer::checkID() {
 			token->type = TokenType::FOR;
 		} else if (token->value == "do") {
 			token->type = TokenType::DO;
+		} else if (token->value == "print") {
+			token->type = TokenType::PRINT;
 		}
 	}
 }

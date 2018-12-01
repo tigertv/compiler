@@ -58,6 +58,18 @@ void CodeGenerator::compile(Node* ast) {
 			compile(ast->right);
 			break;
 
+		case NodeType::PRINT_N:
+			if (ast->left) {
+				outfile << "mov eax,";
+				compile(ast->left);
+				outfile << endl;
+				outfile << "push eax" << endl;
+				outfile << "push message2" << endl;
+				outfile << "call printf" << endl;
+				outfile << "add esp,8" << endl;
+			}
+			break;
+
 		case NodeType::VAR:
 			//outfile << ast->value;
 			break;
