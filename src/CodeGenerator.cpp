@@ -23,7 +23,7 @@ void CodeGenerator::compile(Node* ast) {
 			break;
 			
 		case NodeType::SET:
-			outfile << "mov eax,";
+			outfile << "mov eax, ";
 			compile(ast->left);
 
 			variables.push_back(ast->left->value);
@@ -37,7 +37,7 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << "push eax" << endl;
 			outfile << "push message2" << endl;
 			outfile << "call printf" << endl;
-			outfile << "add esp,8" << endl;
+			outfile << "add esp, 8" << endl;
 			//*/
 
 			//outfile << "xor eax,eax" << endl;
@@ -47,26 +47,26 @@ void CodeGenerator::compile(Node* ast) {
 		case NodeType::ADD_N:
 			compile(ast->left);
 			outfile << endl;
-			outfile << "add eax,";
+			outfile << "add eax, ";
 			compile(ast->right);
 			break;
 
 		case NodeType::SUB_N:
 			compile(ast->left);
 			outfile << endl;
-			outfile << "sub eax,";
+			outfile << "sub eax, ";
 			compile(ast->right);
 			break;
 
 		case NodeType::PRINT_N:
 			if (ast->left) {
-				outfile << "mov eax,";
+				outfile << "mov eax, ";
 				compile(ast->left);
 				outfile << endl;
 				outfile << "push eax" << endl;
 				outfile << "push message2" << endl;
 				outfile << "call printf" << endl;
-				outfile << "add esp,8" << endl;
+				outfile << "add esp, 8" << endl;
 			}
 			break;
 
@@ -97,7 +97,7 @@ void CodeGenerator::compile(Node* ast) {
 			compile(ast->left);
 
 			// exit
-			outfile << "xor eax,eax" << endl;
+			outfile << "xor eax, eax" << endl;
 			outfile << "inc eax" << endl;
 			outfile << "xor ebx, ebx" << endl;
 			outfile << "int 0x80" << endl;
