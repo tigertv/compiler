@@ -21,6 +21,17 @@ Token* Parser::getCurrentToken() {
 	return nullptr;
 }
 
+bool Parser::expect(TokenType type) {
+	
+	Token* token = getCurrentToken();
+	if (token->type == type) {
+		nextToken();
+		return true;
+	}
+
+	return false;
+}
+
 void Parser::printError(std::string text) {
 	std::cout << "Error: " << text << std::endl;
 	exit(1);
@@ -71,6 +82,7 @@ Node* Parser::statement() {
 		case TokenType::PRINT: 
 			node = new Node();
 			node->type = NodeType::PRINT_N;
+			node->value = "PRINT";
 
 			token = nextToken();
 			if (token->type != TokenType::LPAR) {
@@ -98,6 +110,42 @@ Node* Parser::statement() {
 		case TokenType::DO:
 			break;
 
+		case TokenType::ID:
+			{
+				Node* temp = term();
+
+				// assign statement
+				if (this->expect(TokenType::EQU) ) {
+					node = new Node();
+					node->type = NodeType::SET;
+					node->value = "SET";
+					node->left = temp;
+					node->right = expression();
+
+				// function call statement
+				} else if (this->expect(TokenType::LPAR) ) {
+					node = new Node();
+					node->type = NodeType::FUNC_CALL;
+					node->value = "FUNC_CALL";
+					node->left = temp;
+					node->right = expression();
+
+					if(this->expect(TokenType::RPAR) ) {
+
+						if (!this->expect(TokenType::SEMICOLON)) {
+							printError("A semicolon expected in statement.");
+						}
+
+					} else {
+						printError("A right parenthesis expected in statement.");
+					}
+
+				} else {
+					printError("A left parenthesis or equal are expected in statement.");
+				}
+			}
+			break;
+
 		default:
 			node = expression();
 			token = getCurrentToken();
@@ -116,7 +164,6 @@ Node* Parser::statement() {
 	return node;
 }
 
-// expression :: id = expression | id(params) | 
 Node* Parser::expression() {
 	using std::cout;
 	using std::endl;
@@ -135,16 +182,16 @@ Node* Parser::expression() {
 		printError("A token expected in expression");
 	} 
 
-	if (node->type == NodeType::VAR && token->type == TokenType::EQU) {
+	if (node->type == NodeType::NUMBER_C && token->type == TokenType::ADD) {
 		temp = node;
 		node = new Node();
-		node->type = NodeType::SET;
+		node->type = NodeType::ADD_N;
 		nextToken();
-		node->value = "SET";
+		node->value = "ADD";
 		node->left = temp;
 		node->right = expression();
 
-	} else if (node->type == NodeType::NUMBER_C && token->type == TokenType::ADD) {
+	} else if (node->type == NodeType::ID_N && token->type == TokenType::ADD) {
 		temp = node;
 		node = new Node();
 		node->type = NodeType::ADD_N;
@@ -161,7 +208,16 @@ Node* Parser::expression() {
 		node->value = "SUB";
 		node->left = temp;
 		node->right = expression();
-	}
+
+	} else if (node->type == NodeType::ID_N && token->type == TokenType::SUB) {
+		temp = node;
+		node = new Node();
+		node->type = NodeType::SUB_N;
+		nextToken();
+		node->value = "SUB";
+		node->left = temp;
+		node->right = expression();
+	} 
 
 	return node;
 }
@@ -179,7 +235,7 @@ Node* Parser::term() {
 		case TokenType::ID:
 			node = new Node();
 			nextToken();
-			node->type = NodeType::VAR;
+			node->type = NodeType::ID_N;
 			node->value = token->value;
 			break;
 
@@ -197,6 +253,13 @@ Node* Parser::term() {
 			node->value = token->value;
 			break;
 		
+		case TokenType::PRINT:
+			node = new Node();
+			nextToken();
+			node->type = NodeType::PRINT_N;
+			node->value = token->value;
+			break;
+
 		default:
 			//std::cout << "in term: another type of token value=" << token->value << " type=" << token->type << std::endl;
 			//printError("Unexpected token in term");
@@ -205,7 +268,7 @@ Node* Parser::term() {
 
 	return node;
 }
-
+/*
 Node* Parser::sum() {
 	Node* node = term();
 	Node* temp;
@@ -230,6 +293,7 @@ Node* Parser::sum() {
 
 Node* block() {
 	Node* node = new Node();
-
 	return node;
 }
+
+//*/

@@ -23,7 +23,7 @@ $(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(FLAGS) -c $< -o $@
 clean:
 	rm -rf $(BIN_DIR) $(APP)
-	rm -f output.o
+	rm -f output.o output.s a.out
 
 asm: 
 	./main source.calc

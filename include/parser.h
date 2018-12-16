@@ -8,6 +8,7 @@
 
 class Parser {
 	std::vector<Token*> *t;
+	std::vector<std::string> names;
 	uint ti = 0;
 
 	Token* nextToken();
@@ -19,6 +20,7 @@ class Parser {
 	Node* sum();
 	Node* block();
 	void printError(std::string text);
+	bool expect(TokenType type);
 public:
 	Parser();
 	Node* parse(std::vector<Token*>*tokens);

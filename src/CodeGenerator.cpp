@@ -23,15 +23,20 @@ void CodeGenerator::compile(Node* ast) {
 			break;
 			
 		case NodeType::SET:
-			outfile << "mov eax, ";
-			compile(ast->left);
+			{
+				outfile << "sub esp, 4" << endl;
+				variables.push_back(ast->left->value);
 
-			variables.push_back(ast->left->value);
+				int size = variables.size();
+				outfile << "mov eax, ";
 
-			compile(ast->right);
+				compile(ast->right);
 
-			outfile << endl;
-			//outfile << "call print" << endl;
+				outfile << endl;
+				outfile << "mov DWORD [ebp-" << 4*size  << "], eax" << endl;
+				outfile << endl;
+				//outfile << "call print" << endl;
+			}
 
 			//*
 			outfile << "push eax" << endl;
@@ -70,8 +75,23 @@ void CodeGenerator::compile(Node* ast) {
 			}
 			break;
 
-		case NodeType::VAR:
-			//outfile << ast->value;
+		case NodeType::ID_N:
+			{
+				bool isDefined = false;
+				int size = variables.size();
+				for(int i=0;i<size;i++) {
+					if (variables[i] == ast->value) {
+						outfile << "DWORD [ebp-" << 4*i+4 << "]";
+						isDefined = true;
+						break;
+					}
+				}
+
+				if(!isDefined) {
+					cout << "Unexpected variable \"" << ast->value << "\"" << endl;
+					exit(1);
+				}
+			}
 			break;
 
 		case NodeType::NUMBER_C:
@@ -79,6 +99,7 @@ void CodeGenerator::compile(Node* ast) {
 			break;
 
 		case NodeType::PROG:
+			// prologue
 			outfile << "global _start" << endl;
 			outfile << "extern printf" << endl;
 			outfile << endl;
@@ -91,14 +112,19 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << endl;
 
 			outfile << "section .text" << endl;
-			outfile << "_start:" << endl;
+			outfile << "_start:" << endl << endl;
+			outfile << "push ebp" << endl;
+			outfile << "mov ebp,esp" << endl;
 			outfile << endl;
 
 			compile(ast->left);
 
+			// epilogue
+			outfile << "pop ebp" << endl;
+			outfile << endl;
+
 			// exit
-			outfile << "xor eax, eax" << endl;
-			outfile << "inc eax" << endl;
+			outfile << "mov eax, 1" << endl;
 			outfile << "xor ebx, ebx" << endl;
 			outfile << "int 0x80" << endl;
 			outfile << endl;
@@ -118,7 +144,8 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << "mov dl, 1" << endl;
 			//outfile << "mov dl, len" << endl;
 			outfile << "int 0x80" << endl;
-			outfile << "ret" << endl;
+			outfile << endl;
+
 			
 			/*
 			for(int i=0;i<variables.size();i++) {
