@@ -156,7 +156,7 @@ std::vector<Token*>* Lexer::getTokens(std::string content) {
 
 		} else if (c == '/') {
 			token = new Token();
-			token->type = TokenType::RBRACE;
+			token->type = TokenType::DIV;
 			token->value = c;
 			result->push_back(token);
 			inToken = false;

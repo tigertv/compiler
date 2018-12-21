@@ -17,7 +17,7 @@ class Parser {
 	Node* statement();
 	Node* expression();
 	Node* term();
-	Node* sum();
+	Node* factor();
 	Node* block();
 	void printError(std::string text);
 	bool expect(TokenType type);

@@ -52,15 +52,45 @@ void CodeGenerator::compile(Node* ast) {
 		case NodeType::ADD_N:
 			compile(ast->left);
 			outfile << endl;
-			outfile << "add eax, ";
+			//outfile << ";====ADD====" << endl;
+			//outfile << "mov ebx, eax" << endl;
+			outfile << "push eax" << endl;
+			outfile << "mov eax, ";
 			compile(ast->right);
+			outfile << endl << "pop ebx";
+			outfile << endl << "add eax, ebx";
+			//outfile << endl << ";====ADD====" << endl;
 			break;
 
 		case NodeType::SUB_N:
 			compile(ast->left);
 			outfile << endl;
-			outfile << "sub eax, ";
+			//outfile << ";====SUB====" << endl;
+			//outfile << "mov ebx, eax" << endl;
+			outfile << "push eax" << endl;
+			outfile << "mov eax, ";
 			compile(ast->right);
+			outfile << endl << "pop ebx";
+			outfile << endl << "sub ebx, eax";
+			outfile << endl << "mov eax, ebx";
+			//outfile << endl << ";====SUB====" << endl;
+			break;
+
+		case NodeType::MUL_N:
+			compile(ast->left);
+			outfile << endl;
+			outfile << "imul eax, ";
+			compile(ast->right);
+			break;
+
+		case NodeType::DIV_N:
+			compile(ast->left);
+			outfile << endl;
+			outfile << "xor edx, edx" << endl;
+			outfile << "mov ebx, ";
+			compile(ast->right);
+			outfile << endl;
+			outfile << "idiv ebx" << endl;
 			break;
 
 		case NodeType::PRINT_N:
