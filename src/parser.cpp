@@ -44,6 +44,7 @@ Node* Parser::parse(std::vector<Token*> *tokens) {
 	t = tokens;
 	Node* temp = nullptr;	
 	Node* node = nullptr;
+	Token* token;
 
 	do {
 		temp = node;
@@ -54,7 +55,8 @@ Node* Parser::parse(std::vector<Token*> *tokens) {
 
 		node->left = temp;
 		node->right = statement();
-	} while(nextToken());
+		token = getCurrentToken();
+	} while(token);
 
 	temp = node;
 	node = new Node();
@@ -75,6 +77,43 @@ Node* Parser::statement() {
 	Token *token = getCurrentToken();
 
 	switch(token->type) {
+		case TokenType::FUNC: 
+			{
+				std::cout << "function token" << std::endl;
+				token = nextToken();
+
+				if (token->type != TokenType::ID) {
+					printError("An id expected in function statement.");
+				}
+
+				node = new Node();
+				node->type = NodeType::FUNC_N;
+				node->value = "FUNC: " + token->value; // id
+
+				nextToken();
+				
+				if (!expect(TokenType::LPAR)) {
+					printError("A left parenthes expected in function statement.");
+				}
+
+				if (!expect(TokenType::RPAR)) {
+					printError("A right parenthes expected in function statement.");
+				}
+
+				if (!expect(TokenType::LBRACE)) {
+					printError("A left brace expected in function statement.");
+				}
+
+				Node* temp = expression();
+
+				if (!expect(TokenType::RBRACE)) {
+					printError("A right brace expected in function statement.");
+				}
+
+			}
+
+			break;
+
 		case TokenType::IF: 
 			std::cout << "if token" << std::endl;
 			break;
@@ -125,6 +164,12 @@ Node* Parser::statement() {
 					node->left = temp;
 					node->right = expression();
 
+					//*
+					if (!this->expect(TokenType::SEMICOLON)) {
+						printError("A semicolon expected in statement.");
+					}
+					//*/
+
 				// function call statement
 				} else if (this->expect(TokenType::LPAR) ) {
 					node = new Node();
@@ -174,9 +219,7 @@ Node* Parser::expression() {
 	Node* node = term();
 
 	if (!node) {
-		cout << "A node is null in expression" << endl;
 		return node;
-		//printError("A node is null in expression");
 	} 
 
 	Token *token = getCurrentToken();
@@ -249,6 +292,9 @@ Node* Parser::factor() {
 
 			break;
 			
+		case TokenType::RPAR:
+			break;
+
 		default:
 			//std::cout << "in term: another type of token value=" << token->value << " type=" << token->type << std::endl;
 			//printError("Unexpected token in term");

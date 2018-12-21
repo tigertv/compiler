@@ -1,8 +1,6 @@
+fn get2() {
+}
+
 j = 1;
-j = j+j;
-j = j+j;
-j = j+j;
-j = j+j;
-j = j+j;
 j = j+j;
 j = j+j;
