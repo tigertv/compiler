@@ -267,15 +267,11 @@ Node* Parser::term() {
 
 	Node* node = factor();
 	Node* temp;
-	//std::cout << "in term's 1=" << token->type << std::endl;
 	token = getCurrentToken();
-	//std::cout << "in term's 3=" << token->type << std::endl;
 
 	while (token->type == TokenType::DIV || token->type == TokenType::MUL) {
 		temp = node;
 		node = new Node();
-
-	//	std::cout << "in term's 2" << std::endl;
 
 		if (token->type == TokenType::MUL) {
 			node->type = NodeType::MUL_N;
@@ -292,32 +288,10 @@ Node* Parser::term() {
 
 	return node;
 }
+
 /*
-Node* Parser::sum() {
-	Node* node = term();
-	Node* temp;
-	Token *token = getCurrentToken();
-
-	while(token->type == TokenType::ADD || token->type == TokenType::SUB) {
-		temp = node;
-		node = new Node();
-		if (token->type == TokenType::ADD) {
-			node->type = NodeType::ADD_N;
-			node->value = "ADD";
-		} else {
-			node->type = NodeType::SUB_N;
-			node->value = "SUB";
-		}
-		node->left = temp;
-		node->right = term();
-	}
-
-	return node;
-}
-
 Node* block() {
 	Node* node = new Node();
 	return node;
 }
-
 //*/

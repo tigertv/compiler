@@ -52,45 +52,45 @@ void CodeGenerator::compile(Node* ast) {
 		case NodeType::ADD_N:
 			compile(ast->left);
 			outfile << endl;
-			//outfile << ";====ADD====" << endl;
-			//outfile << "mov ebx, eax" << endl;
 			outfile << "push eax" << endl;
 			outfile << "mov eax, ";
 			compile(ast->right);
 			outfile << endl << "pop ebx";
 			outfile << endl << "add eax, ebx";
-			//outfile << endl << ";====ADD====" << endl;
 			break;
 
 		case NodeType::SUB_N:
 			compile(ast->left);
 			outfile << endl;
-			//outfile << ";====SUB====" << endl;
-			//outfile << "mov ebx, eax" << endl;
 			outfile << "push eax" << endl;
 			outfile << "mov eax, ";
 			compile(ast->right);
 			outfile << endl << "pop ebx";
 			outfile << endl << "sub ebx, eax";
 			outfile << endl << "mov eax, ebx";
-			//outfile << endl << ";====SUB====" << endl;
 			break;
 
 		case NodeType::MUL_N:
 			compile(ast->left);
 			outfile << endl;
-			outfile << "imul eax, ";
+			outfile << "push eax" << endl;
+			outfile << "mov eax, ";
 			compile(ast->right);
+			outfile << endl << "pop ebx";
+			outfile << endl << "imul eax, ebx";
 			break;
 
 		case NodeType::DIV_N:
 			compile(ast->left);
 			outfile << endl;
 			outfile << "xor edx, edx" << endl;
-			outfile << "mov ebx, ";
+			outfile << "push eax" << endl;
+			outfile << "mov eax, ";
 			compile(ast->right);
-			outfile << endl;
-			outfile << "idiv ebx" << endl;
+			outfile << endl << endl;
+			outfile << "mov ebx, eax" << endl;
+			outfile << "pop eax" << endl;
+			outfile << "idiv ebx";
 			break;
 
 		case NodeType::PRINT_N:
