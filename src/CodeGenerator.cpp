@@ -24,16 +24,30 @@ void CodeGenerator::compile(Node* ast) {
 			
 		case NodeType::SET:
 			{
-				outfile << "sub esp, 4" << endl;
-				variables.push_back(ast->left->value);
-
+				bool inVars = false;
 				int size = variables.size();
-				outfile << "mov eax, ";
+				int i;
+				for (i=0;i<size;i++) {
+					if (ast->left->value == variables[i]) {
+						inVars = true;
+						break;
+					}
+				}
 
+				if (!inVars) {
+					outfile << "sub esp, 4" << endl;
+					variables.push_back(ast->left->value);
+				}
+
+				outfile << "mov eax, ";
 				compile(ast->right);
 
 				outfile << endl;
-				outfile << "mov DWORD [ebp-" << 4*size  << "], eax" << endl;
+				if (!inVars) {
+					outfile << "mov DWORD [ebp-" << 4*(size+1)  << "], eax" << endl;
+				} else {
+					outfile << "mov DWORD [ebp-" << 4*(i+1)  << "], eax" << endl;
+				}
 				outfile << endl;
 				//outfile << "call print" << endl;
 			}
