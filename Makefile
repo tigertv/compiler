@@ -10,9 +10,9 @@ OBJ := $(SRC:.cpp=.o)
 OBJ := $(OBJ:$(SRC_DIR)/%=%)
 OBJ := $(addprefix $(BIN_DIR)/,$(OBJ))
 
-.PHONY: all clean asm
+.PHONY: all clean 
 
-all: $(BIN_DIR) $(APP) asm
+all: $(BIN_DIR) $(APP) a.out
 
 $(BIN_DIR): 
 	mkdir -p $(BIN_DIR)
@@ -25,7 +25,9 @@ clean:
 	rm -rf $(BIN_DIR) $(APP)
 	rm -f output.o output.s a.out
 
-asm: 
+output.s: source.calc
 	./main source.calc
+output.o: output.s
 	nasm -f elf output.s
+a.out: output.o
 	ld -lc -melf_i386 -dynamic-linker /lib/ld-linux.so.2 output.o -o a.out
