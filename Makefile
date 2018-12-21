@@ -26,8 +26,8 @@ clean:
 	rm -f output.o output.s a.out
 
 output.s: source.calc
-	./main source.calc
+	./main $<
 output.o: output.s
-	nasm -f elf output.s
+	nasm -f elf $<
 a.out: output.o
-	ld -lc -melf_i386 -dynamic-linker /lib/ld-linux.so.2 output.o -o a.out
+	ld -lc -melf_i386 -dynamic-linker /lib/ld-linux.so.2 $< -o $@
