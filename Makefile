@@ -1,4 +1,4 @@
-APP = main
+APP = compiler
 CXX = g++
 FLAGS = -std=c++17 -Wall -I ./include
 SRC_DIR = src
@@ -25,8 +25,8 @@ clean:
 	rm -rf $(BIN_DIR) $(APP)
 	rm -f output.o output.s a.out
 
-output.s: source.calc
-	./main $<
+output.s: source.calc compiler
+	./compiler source.calc
 output.o: output.s
 	nasm -f elf $<
 a.out: output.o

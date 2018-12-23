@@ -4,4 +4,4 @@ build/
 *.o
 *.s
 *.out
-main
+compiler
