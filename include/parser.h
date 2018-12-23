@@ -9,6 +9,7 @@
 class Parser {
 	std::vector<Token*> *t;
 	std::vector<std::string> names;
+	Node* prog = nullptr;
 	uint ti = 0;
 
 	Token* nextToken();

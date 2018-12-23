@@ -142,8 +142,39 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << ast->value;
 			break;
 
+		case NodeType::FUNC_N:
+			// prologue
+			outfile << "fn_" << ast->value << ":" << endl;
+			outfile << "push ebp" << endl;
+			outfile << "mov ebp, esp" << endl << endl;
+
+			compile(ast->left);
+
+			// epilogue
+			outfile << endl;
+			outfile << "mov esp, ebp" << endl;
+			outfile << "pop ebp" << endl;
+			outfile << "ret" << endl;
+			outfile << endl;
+
+			compile(ast->right);
+
+			break;
+
+		case NodeType::RET_N:
+			outfile << "mov eax, ";
+			compile(ast->left);
+			break;
+
+		case NodeType::FUNC_CALL:
+			// prologue
+			outfile << "0" << endl;
+			outfile << "call fn_" << ast->value << endl;
+			break;
+
 		case NodeType::PROG:
 			// prologue
+			outfile << "BITS 32" << endl;
 			outfile << "global _start" << endl;
 			outfile << "extern printf" << endl;
 			outfile << endl;
@@ -156,6 +187,12 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << endl;
 
 			outfile << "section .text" << endl;
+
+			outfile << ";==== FUNCTIONS ======" << endl;
+			compile(ast->right);
+			outfile << ";==== FUNCTIONS ======" << endl;
+
+
 			outfile << "_start:" << endl << endl;
 			outfile << "push ebp" << endl;
 			outfile << "mov ebp,esp" << endl;
@@ -164,6 +201,7 @@ void CodeGenerator::compile(Node* ast) {
 			compile(ast->left);
 
 			// epilogue
+			outfile << "mov esp, ebp" << endl;
 			outfile << "pop ebp" << endl;
 			outfile << endl;
 
