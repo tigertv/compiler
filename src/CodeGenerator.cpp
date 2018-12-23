@@ -143,6 +143,8 @@ void CodeGenerator::compile(Node* ast) {
 			break;
 
 		case NodeType::FUNC_N:
+			compile(ast->right);
+
 			// prologue
 			outfile << "fn_" << ast->value << ":" << endl;
 			outfile << "push ebp" << endl;
@@ -157,7 +159,6 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << "ret" << endl;
 			outfile << endl;
 
-			compile(ast->right);
 
 			break;
 
