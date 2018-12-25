@@ -26,8 +26,8 @@ void CodeGenerator::compile(Node* ast) {
 			{
 				bool inVars = false;
 				int size = variables.size();
-				int i;
-				for (i=0;i<size;i++) {
+				int i=0;
+				for (;i<size;i++) {
 					if (ast->left->value == variables[i]) {
 						inVars = true;
 						break;
@@ -39,7 +39,8 @@ void CodeGenerator::compile(Node* ast) {
 					variables.push_back(ast->left->value);
 				}
 
-				outfile << "mov eax, ";
+				if ( ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N)
+					outfile << "mov eax, ";
 				compile(ast->right);
 
 				outfile << endl;
@@ -64,47 +65,134 @@ void CodeGenerator::compile(Node* ast) {
 			break;
 
 		case NodeType::ADD_N:
-			compile(ast->left);
-			outfile << endl;
-			outfile << "push eax" << endl;
-			outfile << "mov eax, ";
-			compile(ast->right);
-			outfile << endl << "pop ebx";
-			outfile << endl << "add eax, ebx";
+			if ( (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) 
+			&& (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) ){
+				outfile << "mov eax, ";
+				compile(ast->left);
+				outfile << endl << "add eax, ";
+				compile(ast->right);
+				outfile << endl;
+
+			} else if (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) {
+				compile(ast->right);
+				outfile << "add eax, ";
+				compile(ast->left);
+				outfile << endl;
+
+			} else if (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) {
+				compile(ast->left);
+				outfile << "add eax, ";
+				compile(ast->right);
+				outfile << endl;
+
+			} else {
+				compile(ast->left);
+				outfile << "push eax" << endl;
+				compile(ast->right);
+				outfile << "pop ebx" << endl;
+				outfile  << "add eax, ebx" << endl;
+			}
 			break;
 
 		case NodeType::SUB_N:
-			compile(ast->left);
-			outfile << endl;
-			outfile << "push eax" << endl;
-			outfile << "mov eax, ";
-			compile(ast->right);
-			outfile << endl << "pop ebx";
-			outfile << endl << "sub ebx, eax";
-			outfile << endl << "mov eax, ebx";
+			if ( (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) 
+			&& (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) ){
+				outfile << "mov eax, ";
+				compile(ast->left);
+				outfile << endl;
+				outfile << "sub eax, ";
+				compile(ast->right);
+				outfile << endl;
+
+			} else if (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) {
+				compile(ast->right);
+				outfile << "sub eax, ";
+				compile(ast->left);
+				outfile << endl;
+				outfile << "neg eax" << endl;
+
+			} else if (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) {
+				compile(ast->left);
+				outfile << "sub eax, ";
+				compile(ast->right);
+				outfile << endl;
+
+			} else {
+				compile(ast->right);
+				outfile << "push eax" << endl;
+				compile(ast->left);
+				outfile << "pop ebx" << endl;
+				outfile  << "sub eax, ebx" << endl;
+			}
 			break;
 
 		case NodeType::MUL_N:
-			compile(ast->left);
-			outfile << endl;
-			outfile << "push eax" << endl;
-			outfile << "mov eax, ";
-			compile(ast->right);
-			outfile << endl << "pop ebx";
-			outfile << endl << "imul eax, ebx";
+			if ( (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) 
+			&& (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) ){
+				outfile << "mov eax, ";
+				compile(ast->left);
+				outfile << endl << "imul eax, ";
+				compile(ast->right);
+				outfile << endl;
+
+			} else if (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) {
+				compile(ast->right);
+				outfile << "imul eax, ";
+				compile(ast->left);
+				outfile << endl;
+
+			} else if (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) {
+				compile(ast->left);
+				outfile << "imul eax, ";
+				compile(ast->right);
+				outfile << endl;
+
+			} else {
+				compile(ast->left);
+				outfile << "push eax" << endl;
+				compile(ast->right);
+				outfile << "pop ebx" << endl;
+				outfile  << "imul eax, ebx" << endl;
+			}
 			break;
 
 		case NodeType::DIV_N:
-			compile(ast->left);
-			outfile << endl;
-			outfile << "xor edx, edx" << endl;
-			outfile << "push eax" << endl;
-			outfile << "mov eax, ";
-			compile(ast->right);
-			outfile << endl << endl;
-			outfile << "mov ebx, eax" << endl;
-			outfile << "pop eax" << endl;
-			outfile << "idiv ebx";
+			if ( (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) 
+			&& (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) ){
+				outfile << "mov eax, ";
+				compile(ast->left);
+				outfile << endl;
+				outfile << "mov ebx, ";
+				compile(ast->right);
+				outfile << endl;
+				outfile << "xor edx, edx" << endl;
+				outfile << "idiv ebx" << endl;
+
+			} else if (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) {
+				compile(ast->right);
+				outfile << "mov ebx, eax" << endl;
+				outfile << "mov eax, ";
+				compile(ast->left);
+				outfile << endl;
+				outfile << "xor edx, edx" << endl;
+				outfile << "idiv ebx" << endl;
+
+			} else if (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) {
+				compile(ast->left);
+				outfile << "mov ebx, ";
+				compile(ast->right);
+				outfile << endl;
+				outfile << "xor edx, edx" << endl;
+				outfile << "idiv ebx" << endl;
+
+			} else {
+				compile(ast->right);
+				outfile << "push eax" << endl;
+				compile(ast->left);
+				outfile << "pop ebx" << endl;
+				outfile << "xor edx, edx" << endl;
+				outfile  << "idiv ebx" << endl;
+			}
 			break;
 
 		case NodeType::PRINT_N:
@@ -146,30 +234,25 @@ void CodeGenerator::compile(Node* ast) {
 			compile(ast->right);
 
 			// prologue
-			outfile << "fn_" << ast->value << ":" << endl;
+			outfile << "fn_" << ast->value << ":" << endl << endl;
 			outfile << "push ebp" << endl;
 			outfile << "mov ebp, esp" << endl << endl;
 
 			compile(ast->left);
 
 			// epilogue
-			outfile << endl;
 			outfile << "mov esp, ebp" << endl;
 			outfile << "pop ebp" << endl;
 			outfile << "ret" << endl;
 			outfile << endl;
-
-
 			break;
 
 		case NodeType::RET_N:
-			outfile << "mov eax, ";
 			compile(ast->left);
 			break;
 
 		case NodeType::FUNC_CALL:
 			// prologue
-			outfile << "0" << endl;
 			outfile << "call fn_" << ast->value << endl;
 			break;
 
