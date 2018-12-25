@@ -18,7 +18,6 @@ void CodeGenerator::compile(Node* ast) {
 		case NodeType::SEQ:
 			compile(ast->left);
 			compile(ast->right);
-			//outfile << ";" << endl;
 			outfile << endl;
 			break;
 			
@@ -50,18 +49,8 @@ void CodeGenerator::compile(Node* ast) {
 					outfile << "mov DWORD [ebp-" << 4*(i+1)  << "], eax" << endl;
 				}
 				outfile << endl;
-				//outfile << "call print" << endl;
 			}
 
-			//*
-			outfile << "push eax" << endl;
-			outfile << "push message2" << endl;
-			outfile << "call printf" << endl;
-			outfile << "add esp, 8" << endl;
-			//*/
-
-			//outfile << "xor eax,eax" << endl;
-			//outfile << "call print" << endl;
 			break;
 
 		case NodeType::ADD_N:
