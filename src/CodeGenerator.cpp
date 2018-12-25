@@ -248,6 +248,8 @@ void CodeGenerator::compile(Node* ast) {
 			break;
 
 		case NodeType::RET_N:
+			if ( ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N)
+				outfile << "mov eax, ";
 			compile(ast->left);
 			break;
 

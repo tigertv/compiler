@@ -4,8 +4,7 @@ fn get() {
 }
 
 fn get2() {
-	d = 8;
-	ret 1+d+1;
+	ret 777;
 }
 
 j = get();
