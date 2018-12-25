@@ -69,20 +69,39 @@ void CodeGenerator::compile(Node* ast) {
 			&& (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) ){
 				outfile << "mov eax, ";
 				compile(ast->left);
-				outfile << endl << "add eax, ";
-				compile(ast->right);
+
+				outfile << endl;
+
+				if (ast->right->value == "1") {
+					outfile << "inc eax";
+				} else {
+					outfile << "add eax, ";
+					compile(ast->right);
+				}
 				outfile << endl;
 
 			} else if (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) {
 				compile(ast->right);
-				outfile << "add eax, ";
-				compile(ast->left);
+
+				if (ast->left->value == "1") {
+					outfile << "inc eax";
+				} else {
+					outfile << "add eax, ";
+					compile(ast->left);
+				}
+
 				outfile << endl;
 
 			} else if (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) {
 				compile(ast->left);
-				outfile << "add eax, ";
-				compile(ast->right);
+
+				if (ast->right->value == "1") {
+					outfile << "inc eax";
+				} else {
+					outfile << "add eax, ";
+					compile(ast->right);
+				}
+
 				outfile << endl;
 
 			} else {
@@ -100,21 +119,39 @@ void CodeGenerator::compile(Node* ast) {
 				outfile << "mov eax, ";
 				compile(ast->left);
 				outfile << endl;
-				outfile << "sub eax, ";
-				compile(ast->right);
+
+				if (ast->right->value == "1") {
+					outfile << "dec eax";
+				} else {
+					outfile << "sub eax, ";
+					compile(ast->right);
+				}
+
 				outfile << endl;
 
 			} else if (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) {
 				compile(ast->right);
-				outfile << "sub eax, ";
-				compile(ast->left);
+
+				if (ast->left->value == "1") {
+					outfile << "dec eax";
+				} else {
+					outfile << "sub eax, ";
+					compile(ast->left);
+				}
+
 				outfile << endl;
 				outfile << "neg eax" << endl;
 
 			} else if (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) {
 				compile(ast->left);
-				outfile << "sub eax, ";
-				compile(ast->right);
+
+				if (ast->right->value == "1") {
+					outfile << "dec eax";
+				} else {
+					outfile << "sub eax, ";
+					compile(ast->right);
+				}
+
 				outfile << endl;
 
 			} else {
