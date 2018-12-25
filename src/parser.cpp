@@ -167,25 +167,22 @@ Node* Parser::statement() {
 			node = new Node();
 			node->type = NodeType::PRINT_N;
 			node->value = "PRINT";
+			nextToken();
 
-			token = nextToken();
-			if (token->type != TokenType::LPAR) {
+			if (!expect(TokenType::LPAR)) {
 				printError("A left parenthesis expected in print statement.");
 			}
 
-			nextToken();
-
 			node->left = expression();
-			token = getCurrentToken();
 			
-			if (token->type != TokenType::RPAR) {
+			if (!expect(TokenType::RPAR)) {
 				printError("A right parenthesis expected in print statement.");
 			}
 
-			token = nextToken();
-			if (token->type != TokenType::SEMICOLON) {
+			if (!expect(TokenType::SEMICOLON)) {
 				printError("A semicolon expected in print statement.");
 			}
+
 			break;
 
 		case TokenType::WHILE:
@@ -276,7 +273,6 @@ Node* Parser::expression() {
 	Node* temp;
 
 	while (token->type == TokenType::ADD || token->type == TokenType::SUB) {
-		//cout << "in expr loop" << endl;
 		temp = node;
 		node = new Node();
 

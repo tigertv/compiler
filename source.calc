@@ -10,3 +10,4 @@ fn get2() {
 j = get();
 s = 0;
 j = get2();
+print((1+get2()+1) + 1);
