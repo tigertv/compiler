@@ -4,11 +4,12 @@ fn get() {
 }
 
 fn get2() {
-	ret 777;
+	ret 123;
 }
 
 j = get();
 s = 0;
 j = get2();
-print(((1+get2()+1) + 1) - 1 - 3);
 print(j);
+print(1+get2());
+print(11567);

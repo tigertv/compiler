@@ -229,10 +229,18 @@ void CodeGenerator::compile(Node* ast) {
 			compile(ast->left);
 
 			outfile << endl;
+
+			//*
+			//outfile << "push eax" << endl;
+			outfile << "call print" << endl;
+			//*/
+
+			/*
 			outfile << "push eax" << endl;
 			outfile << "push message2" << endl;
 			outfile << "call printf" << endl;
 			outfile << "add esp, 8" << endl;
+			//*/
 			break;
 
 		case NodeType::ID_N:
@@ -290,14 +298,17 @@ void CodeGenerator::compile(Node* ast) {
 			// prologue
 			outfile << "BITS 32" << endl;
 			outfile << "global _start" << endl;
-			outfile << "extern printf" << endl;
+			//outfile << "extern printf" << endl;
 			outfile << endl;
 
-			outfile << "section .data" << endl;
-			outfile << "message db 20" << endl;
-			outfile << "message2 db \"%d\",10,0" << endl;
-			outfile << "msg	db 0xa,\"123456789012345678901234567890123456789\", 0xa" << endl;
-			outfile << "len	equ $-msg " << endl;
+			//outfile << "section .data" << endl;
+			//outfile << "message2 db \"%d\",10,0" << endl;
+			//outfile << "msg TIMES 20 db 0" << endl;
+			//outfile << "msg2 db 0" << endl;
+			//outfile << "len	equ $-msg " << endl;
+			outfile << "section .bss" << endl;
+			outfile << "msg resb 40" << endl;
+			outfile << "msg2 resb 0" << endl;
 			outfile << endl;
 
 			outfile << "section .text" << endl;
@@ -305,7 +316,6 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << ";==== FUNCTIONS ======" << endl;
 			compile(ast->right);
 			outfile << ";==== FUNCTIONS ======" << endl;
-
 
 			outfile << "_start:" << endl << endl;
 			outfile << "push ebp" << endl;
@@ -326,23 +336,41 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << endl;
 
 			// print function
-			outfile << "print:" << endl;
-			outfile << endl;
-			outfile << "xor edx, edx" << endl;
+			outfile << "print_char:" << endl;
 
-			outfile << "mov ecx, msg" << endl;
-			outfile << "add ecx, eax" << endl;
-			outfile << "xor eax, eax" << endl;
-			outfile << "mov al, 4" << endl;
-			outfile << "xor ebx, ebx" << endl;
-			outfile << "inc ebx" << endl;
-			outfile << "xor edx, edx" << endl;
-			outfile << "mov dl, 1" << endl;
-			//outfile << "mov dl, len" << endl;
+			outfile << "mov eax, 4" << endl;
+			outfile << "mov ebx, 1" << endl;
+			outfile << "lea ecx, [esp+4]" << endl;
+			outfile << "mov edx, 1" << endl;
 			outfile << "int 0x80" << endl;
-			outfile << endl;
+			outfile << "ret" << endl;
 
-			
+			outfile << "print:" << endl;
+			outfile << "xor edi, edi" << endl;
+			outfile << "lea ecx, [msg2]" << endl;
+			outfile << "mov ebx, 10" << endl;
+
+			outfile << "print_loop:" << endl;
+			outfile << "xor edx, edx" << endl;
+			outfile << "idiv ebx" << endl;
+			outfile << "add dl, '0'" << endl;
+			outfile << "dec ecx" << endl;
+			outfile << "inc edi" << endl;
+			outfile << "mov [ecx],dl" << endl;
+			outfile << "test eax, eax" << endl;
+			outfile << "jnz print_loop" << endl;
+
+			outfile << "mov eax, 4" << endl;
+			outfile << "mov ebx, 1" << endl;
+			outfile << "mov edx, edi" << endl;
+			outfile << "int 0x80" << endl;
+
+			outfile << "push 0xa" << endl;
+			outfile << "call print_char" << endl;
+			outfile << "add esp, 4" << endl;
+
+			outfile << "ret" << endl;
+
 			/*
 			for(int i=0;i<variables.size();i++) {
 				outfile << "\toutfile << \"" << variables[i] << "=\" << " << variables[i] << " << endl;" << endl;

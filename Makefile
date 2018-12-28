@@ -30,4 +30,6 @@ output.s: source.calc compiler
 output.o: output.s
 	nasm -f elf $<
 a.out: output.o
-	ld -lc -melf_i386 -dynamic-linker /lib/ld-linux.so.2 $< -o $@
+	ld -melf_i386 $< -o $@
+
+#ld -lc -melf_i386 -dynamic-linker /lib/ld-linux.so.2 $< -o $@
