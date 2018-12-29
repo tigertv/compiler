@@ -335,20 +335,13 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << "int 0x80" << endl;
 			outfile << endl;
 
-			// print function
-			outfile << "print_char:" << endl;
-
-			outfile << "mov eax, 4" << endl;
-			outfile << "mov ebx, 1" << endl;
-			outfile << "lea ecx, [esp+4]" << endl;
-			outfile << "mov edx, 1" << endl;
-			outfile << "int 0x80" << endl;
-			outfile << "ret" << endl;
-
+			// print function : prints a decimal number in eax register with a new line
 			outfile << "print:" << endl;
-			outfile << "xor edi, edi" << endl;
+			outfile << "mov edi, 1" << endl;
 			outfile << "mov ecx, esp" << endl;
 			outfile << "mov ebx, 10" << endl;
+			outfile << "dec ecx" << endl;
+			outfile << "mov [ecx], bl" << endl;
 
 			outfile << "print_loop:" << endl;
 			outfile << "xor edx, edx" << endl;
@@ -364,10 +357,6 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << "mov ebx, 1" << endl;
 			outfile << "mov edx, edi" << endl;
 			outfile << "int 0x80" << endl;
-
-			outfile << "push 0xa" << endl;
-			outfile << "call print_char" << endl;
-			outfile << "add esp, 4" << endl;
 
 			outfile << "ret" << endl;
 
