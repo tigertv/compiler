@@ -306,9 +306,9 @@ void CodeGenerator::compile(Node* ast) {
 			//outfile << "msg TIMES 20 db 0" << endl;
 			//outfile << "msg2 db 0" << endl;
 			//outfile << "len	equ $-msg " << endl;
-			outfile << "section .bss" << endl;
-			outfile << "msg resb 40" << endl;
-			outfile << "msg2 resb 0" << endl;
+			//outfile << "section .bss" << endl;
+			//outfile << "msg resb 40" << endl;
+			//outfile << "msg2 resb 0" << endl;
 			outfile << endl;
 
 			outfile << "section .text" << endl;
@@ -347,7 +347,7 @@ void CodeGenerator::compile(Node* ast) {
 
 			outfile << "print:" << endl;
 			outfile << "xor edi, edi" << endl;
-			outfile << "lea ecx, [msg2]" << endl;
+			outfile << "mov ecx, esp" << endl;
 			outfile << "mov ebx, 10" << endl;
 
 			outfile << "print_loop:" << endl;
