@@ -10,7 +10,7 @@ class CodeGenerator{
 	std::vector<std::string> variables;
 	std::ofstream outfile;
 public:
-	CodeGenerator();
+	CodeGenerator(std::string ofile);
 	~CodeGenerator();
 	void compile(Node* tree);
 };

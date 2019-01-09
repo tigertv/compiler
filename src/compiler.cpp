@@ -32,8 +32,8 @@ void traverse(Node* node) {
 int main(int argc, char* argv[]) {
 	using namespace std;
 
-    if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " sourcefile.calc" << std::endl;
+    if (argc < 3) {
+        std::cerr << "Usage: " << argv[0] << " infile.calc outfile.asm" << std::endl;
         return 1;
     }
     // Print the user's name:
@@ -61,9 +61,14 @@ int main(int argc, char* argv[]) {
 	traverse(ast);
 
 	cout << "+++++ after traverse ast ++++" << endl;
-
-	CodeGenerator generator;
-	generator.compile(ast);
+	
+	if (argv[2]) {
+		CodeGenerator generator(argv[2]);
+		generator.compile(ast);
+	} else {
+		CodeGenerator generator("output.asm");
+		generator.compile(ast);
+	}
 
 	//delete(tokens);
 	//delete(lexer);

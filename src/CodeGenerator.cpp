@@ -1,8 +1,8 @@
 #include <iostream>
 #include "CodeGenerator.h"
 
-CodeGenerator::CodeGenerator() {
-	outfile.open("output.s");
+CodeGenerator::CodeGenerator(std::string ofile) {
+	this->outfile.open(ofile);
 }
 
 CodeGenerator::~CodeGenerator() {
