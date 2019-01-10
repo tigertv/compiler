@@ -9,6 +9,7 @@ class Lexer {
 	bool inToken;
 	Token *token;
 	void checkID();
+	int position;
 public:
 	Lexer();
 	std::vector<Token*>* getTokens(std::string content);

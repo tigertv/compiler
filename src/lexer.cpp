@@ -34,16 +34,33 @@ void Lexer::checkID() {
 std::vector<Token*>* Lexer::getTokens(std::string content) {
  
 	std::vector<Token*> *result = new std::vector<Token*>();
+	this->position = 0;
 
 	//std::string breaksymbols[] = {"ddd","dss"};
 	//std::string reservedWords[] = {"if","else", "while", "print"};
 	//std::vector<std::string> symbolTable;
 
 	std::string temp = "";
-	for (char c : content) {
+	int size = content.length();
+	for (int i = 0; i<size;i ++) {
+		char c = content[i];
 		if (inToken) {
+			if (token->type == TokenType::COMMENT) {
+				if (c == '\n') {
+					inToken = false;
+				}
+				continue;
 			// create previous token
-			if (c == '\"') {
+			} else if (token->type == TokenType::MULTICOMMENT) {
+				if (c == '*') {
+					if ( i+1 < size && content[i+1] == '/') {
+						i = i+1;
+						inToken = false;
+					}
+				}
+				continue;
+			
+			} else if (c == '\"') {
 				if (token->type == TokenType::STRING) {
 					inToken = false;
 					result->push_back(token);
@@ -155,6 +172,22 @@ std::vector<Token*>* Lexer::getTokens(std::string content) {
 			inToken = false;
 
 		} else if (c == '/') {
+			if (i+1 < size) {
+				if (content[i+1] == '/') {
+					token = new Token();
+					token->type = TokenType::COMMENT;
+					token->value = "COMMENT";
+					inToken = true;
+					continue;
+				} else if (content[i+1] == '*') {
+					token = new Token();
+					token->type = TokenType::MULTICOMMENT;
+					token->value = "MULTICOMMENT";
+					inToken = true;
+					continue;
+				}
+			}
+
 			token = new Token();
 			token->type = TokenType::DIV;
 			token->value = c;
