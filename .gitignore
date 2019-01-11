@@ -1,7 +1,9 @@
 all/
 build/
+flex/*
+!flex/*.lex
+tests/*
+!tests/*.calc
 *.swp
 *.o
-*.s
-*.out
 compiler

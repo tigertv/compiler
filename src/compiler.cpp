@@ -3,6 +3,7 @@
 #include <string>
 #include <list>
 #include "lexer.h"
+#include "flexer.h"
 #include "parser.h"
 #include "CodeGenerator.h"
 
@@ -47,7 +48,8 @@ int main(int argc, char* argv[]) {
 	cout << content;
 	cout << "===============================" << endl;
 
-	Lexer lexer;
+	//Lexer lexer;
+	Flexer lexer;
 	vector<Token*> *tokens = lexer.getTokens(content);
 	
 	for (uint i=0;i<tokens->size();i++) {
