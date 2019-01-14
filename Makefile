@@ -39,7 +39,6 @@ $(TESTS): % : %.$(EXT) %.tst
 	./$(APP) $< $@.asm
 	nasm -f elf $@.asm
 	ld -melf_i386 $@.o -o $@
-	./$@ > $@.out
 
 lexer: flex/1.lex $(BIN_DIR)
 	flex --header-file=flex/clexer.h -o flex/lex.yy.cpp flex/1.lex 
