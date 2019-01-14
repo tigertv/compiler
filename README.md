@@ -7,7 +7,7 @@ Build the compiler:
 make
 ```
 
-Build tests:
+Build and run tests:
 
 ```
 make test
