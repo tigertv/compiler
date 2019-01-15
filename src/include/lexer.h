@@ -3,9 +3,10 @@
 
 #include <vector>
 #include <string>
+#include "ILexer.h"
 #include "token.h"
 
-class Lexer {
+class Lexer : public ILexer {
 	bool inToken;
 	Token *token;
 	void checkID();

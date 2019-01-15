@@ -5,6 +5,7 @@
 #include "lexer.h"
 #include "flexer.h"
 #include "parser.h"
+#include "ILexer.h"
 #include "CodeGenerator.h"
 
 std::string readFile(std::string fileName) {
