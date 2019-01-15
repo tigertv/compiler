@@ -47,7 +47,7 @@ Node* Parser::parse(std::vector<Token*> *tokens) {
 	Token* token;
 
 	Node* prog = new Node();
-	prog->type = NodeType::PROG;
+	prog->type = NodeType::N_PROG;
 	prog->value = "PROG";
 	this->prog = prog;
 
@@ -57,7 +57,7 @@ Node* Parser::parse(std::vector<Token*> *tokens) {
 		Node* st = statement();
 		if (st) {
 			node = new Node();
-			node->type = NodeType::SEQ;
+			node->type = NodeType::N_SEQ;
 			node->value = "SEQ";
 
 			node->left = temp;
@@ -81,31 +81,31 @@ Node* Parser::statement() {
 	Token *token = getCurrentToken();
 
 	switch(token->type) {
-		case TokenType::FUNC: 
+		case TokenType::T_FUNC: 
 			{
 				//Node* pr = this->prog;
 
 				token = nextToken();
 
-				if (token->type != TokenType::ID) {
+				if (token->type != TokenType::T_ID) {
 					printError("An id expected in function statement.");
 				}
 
 				node = new Node();
-				node->type = NodeType::FUNC_N;
+				node->type = NodeType::N_FUNC;
 				node->value = token->value; // id
 
 				nextToken();
 				
-				if (!expect(TokenType::LPAR)) {
+				if (!expect(TokenType::T_LPAR)) {
 					printError("A left parenthes expected in function statement.");
 				}
 
-				if (!expect(TokenType::RPAR)) {
+				if (!expect(TokenType::T_RPAR)) {
 					printError("A right parenthes expected in function statement.");
 				}
 
-				if (!expect(TokenType::LBRACE)) {
+				if (!expect(TokenType::T_LBRACE)) {
 					printError("A left brace expected in function statement.");
 				}
 
@@ -114,11 +114,11 @@ Node* Parser::statement() {
 				Node* temp;
 				token = getCurrentToken();
 
-				while(token && token->type != TokenType::RBRACE) {
+				while(token && token->type != TokenType::T_RBRACE) {
 					temp = node;
 
 					node = new Node();
-					node->type = NodeType::SEQ;
+					node->type = NodeType::N_SEQ;
 					node->value = "SEQ";
 
 					node->left = temp;
@@ -131,7 +131,7 @@ Node* Parser::statement() {
 				prog->right = func;
 				func->right = temp;
 
-				if (!expect(TokenType::RBRACE)) {
+				if (!expect(TokenType::T_RBRACE)) {
 					printError("A right brace expected in function statement.");
 				}
 
@@ -140,12 +140,12 @@ Node* Parser::statement() {
 
 			break;
 
-		case TokenType::RET: 
+		case TokenType::T_RET: 
 			{
 				nextToken();
 
 				node = new Node();
-				node->type = NodeType::RET_N;
+				node->type = NodeType::N_RET;
 				node->value = "RET";
 				node->left = expression();
 
@@ -153,76 +153,76 @@ Node* Parser::statement() {
 					printError("An expression expected in return statement.");
 				}
 
-				if (!expect(TokenType::SEMICOLON)) {
+				if (!expect(TokenType::T_SEMICOLON)) {
 					printError("A right brace expected in return statement.");
 				}
 			}
 			break;
 			
-		case TokenType::IF: 
+		case TokenType::T_IF: 
 			std::cout << "if token" << std::endl;
 			break;
 			
-		case TokenType::PRINT: 
+		case TokenType::T_PRINT: 
 			node = new Node();
-			node->type = NodeType::PRINT_N;
+			node->type = NodeType::N_PRINT;
 			node->value = "PRINT";
 			nextToken();
 
-			if (!expect(TokenType::LPAR)) {
+			if (!expect(TokenType::T_LPAR)) {
 				printError("A left parenthesis expected in print statement.");
 			}
 
 			node->left = expression();
 			
-			if (!expect(TokenType::RPAR)) {
+			if (!expect(TokenType::T_RPAR)) {
 				printError("A right parenthesis expected in print statement.");
 			}
 
-			if (!expect(TokenType::SEMICOLON)) {
+			if (!expect(TokenType::T_SEMICOLON)) {
 				printError("A semicolon expected in print statement.");
 			}
 
 			break;
 
-		case TokenType::WHILE:
+		case TokenType::T_WHILE:
 			break;
 
-		case TokenType::DO:
+		case TokenType::T_DO:
 			break;
 
-		case TokenType::ID:
+		case TokenType::T_ID:
 			{
 				Node* temp = new Node();
-				temp->type = NodeType::ID_N;
+				temp->type = NodeType::N_ID;
 				temp->value = token->value;
 				nextToken();
 
 				// assign statement
-				if (this->expect(TokenType::EQU) ) {
+				if (this->expect(TokenType::T_ASSIGN) ) {
 					node = new Node();
-					node->type = NodeType::SET;
+					node->type = NodeType::N_ASSIGN;
 					node->value = "SET";
 					node->left = temp;
 					node->right = expression();
 
 					//*
-					if (!this->expect(TokenType::SEMICOLON)) {
+					if (!this->expect(TokenType::T_SEMICOLON)) {
 						printError("A semicolon expected in statement.");
 					}
 					//*/
 
 				// function call statement
-				} else if (this->expect(TokenType::LPAR) ) {
+				} else if (this->expect(TokenType::T_LPAR) ) {
 					node = new Node();
-					node->type = NodeType::FUNC_CALL;
+					node->type = NodeType::N_FUNC_CALL;
 					node->value = token->value;
 					node->left = temp;
 					node->right = expression();
 
-					if(this->expect(TokenType::RPAR) ) {
+					if(this->expect(TokenType::T_RPAR) ) {
 
-						if (!this->expect(TokenType::SEMICOLON)) {
+						if (!this->expect(TokenType::T_SEMICOLON)) {
 							printError("A semicolon expected in statement.");
 						}
 
@@ -244,7 +244,7 @@ Node* Parser::statement() {
 				printError("A token expected in statement.");
 			}
 			
-			if (token->type != TokenType::SEMICOLON) {
+			if (token->type != TokenType::T_SEMICOLON) {
 				cout << "in statement token-type="+std::to_string(token->type) << endl;
 				printError("A semicolon expected in statement.");
 			}
@@ -272,15 +272,15 @@ Node* Parser::expression() {
 
 	Node* temp;
 
-	while (token->type == TokenType::ADD || token->type == TokenType::SUB) {
+	while (token->type == TokenType::T_ADD || token->type == TokenType::T_SUB) {
 		temp = node;
 		node = new Node();
 
-		if (token->type == TokenType::ADD) {
-			node->type = NodeType::ADD_N;
+		if (token->type == TokenType::T_ADD) {
+			node->type = NodeType::N_ADD;
 			node->value = "ADD";
 		} else {
-			node->type = NodeType::SUB_N;
+			node->type = NodeType::N_SUB;
 			node->value = "SUB";
 		}
 		node->left=temp;
@@ -302,52 +302,52 @@ Node* Parser::factor() {
 
 	switch(token->type) {
 
-		case TokenType::ID:
+		case TokenType::T_ID:
 			{
 				node = new Node();
 				Token* temp = nextToken();
-				if (temp->type == TokenType::LPAR) {
+				if (temp->type == TokenType::T_LPAR) {
 					nextToken();
-					node->type = NodeType::FUNC_CALL;
+					node->type = NodeType::N_FUNC_CALL;
 					node->value = token->value;
 					node->left = expression();
 					
-					if(!this->expect(TokenType::RPAR) ) {
+					if(!this->expect(TokenType::T_RPAR) ) {
 						printError("A right parenthesis expected in funcion call.");
 					}
 
 				} else {
-					node->type = NodeType::ID_N;
+					node->type = NodeType::N_ID;
 					node->value = token->value;
 				}
 			}
 			break;
 
-		case TokenType::NUMBER:
+		case TokenType::T_NUMBER:
 			node = new Node();
 			nextToken();
-			node->type = NodeType::NUMBER_C;
+			node->type = NodeType::N_NUMBER_C;
 			node->value = token->value;
 			break;
 
-		case TokenType::STRING:
+		case TokenType::T_STRING:
 			node = new Node();
 			nextToken();
-			node->type = NodeType::STRING_C;
+			node->type = NodeType::N_STRING_C;
 			node->value = token->value;
 			break;
 
-		case TokenType::LPAR:
+		case TokenType::T_LPAR:
 			nextToken();
 			node = expression();
 
-			if(!this->expect(TokenType::RPAR) ) {
+			if(!this->expect(TokenType::T_RPAR) ) {
 				printError("A right parenthesis expected in statement.");
 			}
 
 			break;
 			
-		case TokenType::RPAR:
+		case TokenType::T_RPAR:
 			break;
 
 		default:
@@ -370,15 +370,15 @@ Node* Parser::term() {
 	Node* temp;
 	token = getCurrentToken();
 
-	while (token->type == TokenType::DIV || token->type == TokenType::MUL) {
+	while (token->type == TokenType::T_DIV || token->type == TokenType::T_MUL) {
 		temp = node;
 		node = new Node();
 
-		if (token->type == TokenType::MUL) {
-			node->type = NodeType::MUL_N;
+		if (token->type == TokenType::T_MUL) {
+			node->type = NodeType::N_MUL;
 			node->value = "MUL";
 		} else {
-			node->type = NodeType::DIV_N;
+			node->type = NodeType::N_DIV;
 			node->value = "DIV";
 		}
 		node->left=temp;

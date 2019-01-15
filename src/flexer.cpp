@@ -23,79 +23,77 @@ std::vector<Token*>* Flexer::getTokens(std::string content) {
 		token = new Token();
 		token->type = (TokenType)p;
 		switch(p) {
-		case NUMBER:
+		case T_NUMBER:
 			token->value = std::to_string(yylval.ival);
 			result->push_back(token);
 			break;
 
-		case ID:
+		case T_ID:
 			token->value = yylval.cval;
 			result->push_back(token);
 			break;
 
-		case FUNC:
+		case T_FUNC:
 			token->value = "FUNC";
 			result->push_back(token);
 			break;
 
-		case RET:
+		case T_RET:
 			token->value = "RET";
 			result->push_back(token);
 			break;
 
-		case DIV:
+		case T_DIV:
 			token->value = "/";
 			result->push_back(token);
 			break;
 
-		case MUL:
+		case T_MUL:
 			token->value = "*";
 			result->push_back(token);
 			break;
 
-		case SUB:
+		case T_SUB:
 			token->value = "-";
 			result->push_back(token);
 			break;
 
-		case ADD:
+		case T_ADD:
 			token->value = "+";
 			result->push_back(token);
 			break;
 
-		case LPAR:
+		case T_LPAR:
 			token->value = "(";
 			result->push_back(token);
 			break;
 
-		case RPAR:
+		case T_RPAR:
 			token->value = ")";
 			result->push_back(token);
 			break;
 
-		case LBRACE:
+		case T_LBRACE:
 			token->value = "{";
 			result->push_back(token);
 			break;
 
-		case RBRACE:
+		case T_RBRACE:
 			token->value = "}";
 			result->push_back(token);
 			break;
 
-		case EQU:
+		case T_ASSIGN:
 			token->value = "=";
 			result->push_back(token);
 			break;
 
-		case PRINT:
-			token->type = (TokenType)p;
+		case T_PRINT:
 			token->value = "PRINT";
 			result->push_back(token);
 			break;
 
-		case SEMICOLON:
-			token->type = TokenType::SEMICOLON;
+		case T_SEMICOLON:
 			token->value = ";";//std::to_string(yylval.ival);
 			result->push_back(token);
 			break;

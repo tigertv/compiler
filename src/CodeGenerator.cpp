@@ -15,13 +15,13 @@ void CodeGenerator::compile(Node* ast) {
 	if (!ast) return;
 
 	switch(ast->type) {
-		case NodeType::SEQ:
+		case NodeType::N_SEQ:
 			compile(ast->left);
 			compile(ast->right);
 			outfile << endl;
 			break;
 			
-		case NodeType::SET:
+		case NodeType::N_ASSIGN:
 			{
 				bool inVars = false;
 				int size = variables.size();
@@ -38,7 +38,7 @@ void CodeGenerator::compile(Node* ast) {
 					variables.push_back(ast->left->value);
 				}
 
-				if ( ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N)
+				if ( ast->right->type == NodeType::N_NUMBER_C || ast->right->type == NodeType::N_ID)
 					outfile << "mov eax, ";
 				compile(ast->right);
 
@@ -53,9 +53,9 @@ void CodeGenerator::compile(Node* ast) {
 
 			break;
 
-		case NodeType::ADD_N:
-			if ( (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) 
-			&& (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) ){
+		case NodeType::N_ADD:
+			if ( (ast->left->type == NodeType::N_NUMBER_C || ast->left->type == NodeType::N_ID) 
+			&& (ast->right->type == NodeType::N_NUMBER_C || ast->right->type == NodeType::N_ID) ){
 				outfile << "mov eax, ";
 				compile(ast->left);
 
@@ -69,7 +69,7 @@ void CodeGenerator::compile(Node* ast) {
 				}
 				outfile << endl;
 
-			} else if (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) {
+			} else if (ast->left->type == NodeType::N_NUMBER_C || ast->left->type == NodeType::N_ID) {
 				compile(ast->right);
 
 				if (ast->left->value == "1") {
@@ -81,7 +81,7 @@ void CodeGenerator::compile(Node* ast) {
 
 				outfile << endl;
 
-			} else if (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) {
+			} else if (ast->right->type == NodeType::N_NUMBER_C || ast->right->type == NodeType::N_ID) {
 				compile(ast->left);
 
 				if (ast->right->value == "1") {
@@ -102,9 +102,9 @@ void CodeGenerator::compile(Node* ast) {
 			}
 			break;
 
-		case NodeType::SUB_N:
-			if ( (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) 
-			&& (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) ){
+		case NodeType::N_SUB:
+			if ( (ast->left->type == NodeType::N_NUMBER_C || ast->left->type == NodeType::N_ID) 
+			&& (ast->right->type == NodeType::N_NUMBER_C || ast->right->type == NodeType::N_ID) ){
 				outfile << "mov eax, ";
 				compile(ast->left);
 				outfile << endl;
@@ -118,7 +118,7 @@ void CodeGenerator::compile(Node* ast) {
 
 				outfile << endl;
 
-			} else if (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) {
+			} else if (ast->left->type == NodeType::N_NUMBER_C || ast->left->type == NodeType::N_ID) {
 				compile(ast->right);
 
 				if (ast->left->value == "1") {
@@ -131,7 +131,7 @@ void CodeGenerator::compile(Node* ast) {
 				outfile << endl;
 				outfile << "neg eax" << endl;
 
-			} else if (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) {
+			} else if (ast->right->type == NodeType::N_NUMBER_C || ast->right->type == NodeType::N_ID) {
 				compile(ast->left);
 
 				if (ast->right->value == "1") {
@@ -152,22 +152,22 @@ void CodeGenerator::compile(Node* ast) {
 			}
 			break;
 
-		case NodeType::MUL_N:
-			if ( (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) 
-			&& (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) ){
+		case NodeType::N_MUL:
+			if ( (ast->left->type == NodeType::N_NUMBER_C || ast->left->type == NodeType::N_ID) 
+			&& (ast->right->type == NodeType::N_NUMBER_C || ast->right->type == NodeType::N_ID) ){
 				outfile << "mov eax, ";
 				compile(ast->left);
 				outfile << endl << "imul eax, ";
 				compile(ast->right);
 				outfile << endl;
 
-			} else if (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) {
+			} else if (ast->left->type == NodeType::N_NUMBER_C || ast->left->type == NodeType::N_ID) {
 				compile(ast->right);
 				outfile << "imul eax, ";
 				compile(ast->left);
 				outfile << endl;
 
-			} else if (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) {
+			} else if (ast->right->type == NodeType::N_NUMBER_C || ast->right->type == NodeType::N_ID) {
 				compile(ast->left);
 				outfile << "imul eax, ";
 				compile(ast->right);
@@ -182,9 +182,9 @@ void CodeGenerator::compile(Node* ast) {
 			}
 			break;
 
-		case NodeType::DIV_N:
-			if ( (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) 
-			&& (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) ){
+		case NodeType::N_DIV:
+			if ( (ast->left->type == NodeType::N_NUMBER_C || ast->left->type == NodeType::N_ID) 
+			&& (ast->right->type == NodeType::N_NUMBER_C || ast->right->type == NodeType::N_ID) ){
 				outfile << "mov eax, ";
 				compile(ast->left);
 				outfile << endl;
@@ -194,7 +194,7 @@ void CodeGenerator::compile(Node* ast) {
 				outfile << "xor edx, edx" << endl;
 				outfile << "idiv ebx" << endl;
 
-			} else if (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) {
+			} else if (ast->left->type == NodeType::N_NUMBER_C || ast->left->type == NodeType::N_ID) {
 				compile(ast->right);
 				outfile << "mov ebx, eax" << endl;
 				outfile << "mov eax, ";
@@ -203,7 +203,7 @@ void CodeGenerator::compile(Node* ast) {
 				outfile << "xor edx, edx" << endl;
 				outfile << "idiv ebx" << endl;
 
-			} else if (ast->right->type == NodeType::NUMBER_C || ast->right->type == NodeType::ID_N) {
+			} else if (ast->right->type == NodeType::N_NUMBER_C || ast->right->type == NodeType::N_ID) {
 				compile(ast->left);
 				outfile << "mov ebx, ";
 				compile(ast->right);
@@ -221,8 +221,8 @@ void CodeGenerator::compile(Node* ast) {
 			}
 			break;
 
-		case NodeType::PRINT_N:
-			if (ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N) {
+		case NodeType::N_PRINT:
+			if (ast->left->type == NodeType::N_NUMBER_C || ast->left->type == NodeType::N_ID) {
 				outfile << "mov eax, ";
 			}
 
@@ -243,7 +243,7 @@ void CodeGenerator::compile(Node* ast) {
 			//*/
 			break;
 
-		case NodeType::ID_N:
+		case NodeType::N_ID:
 			{
 				bool isDefined = false;
 				int size = variables.size();
@@ -262,11 +262,11 @@ void CodeGenerator::compile(Node* ast) {
 			}
 			break;
 
-		case NodeType::NUMBER_C:
+		case NodeType::N_NUMBER_C:
 			outfile << ast->value;
 			break;
 
-		case NodeType::FUNC_N:
+		case NodeType::N_FUNC:
 			compile(ast->right);
 
 			// prologue
@@ -283,18 +283,18 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << endl;
 			break;
 
-		case NodeType::RET_N:
-			if ( ast->left->type == NodeType::NUMBER_C || ast->left->type == NodeType::ID_N)
+		case NodeType::N_RET:
+			if ( ast->left->type == NodeType::N_NUMBER_C || ast->left->type == NodeType::N_ID)
 				outfile << "mov eax, ";
 			compile(ast->left);
 			break;
 
-		case NodeType::FUNC_CALL:
+		case NodeType::N_FUNC_CALL:
 			// prologue
 			outfile << "call fn_" << ast->value << endl;
 			break;
 
-		case NodeType::PROG:
+		case NodeType::N_PROG:
 			// prologue
 			outfile << "BITS 32" << endl;
 			outfile << "global _start" << endl;
