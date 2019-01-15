@@ -10,38 +10,11 @@ typedef union {
 yylval_type yylval;
 
 Flexer::Flexer() {
-	this->inToken = false;
-}
 
-void Flexer::checkID() {
-	if (token->type == TokenType::ID) {
-		if (token->value == "if") {
-			token->type = TokenType::IF;
-		} else if (token->value == "else") {
-			token->type = TokenType::ELSE;
-		} else if (token->value == "while") {
-			token->type = TokenType::WHILE;
-		} else if (token->value == "fn") {
-			token->type = TokenType::FUNC;
-		} else if (token->value == "ret") {
-			token->type = TokenType::RET;
-		} else if (token->value == "true") {
-			token->type = TokenType::BOOL;
-		} else if (token->value == "false") {
-			token->type = TokenType::BOOL;
-		} else if (token->value == "for") {
-			token->type = TokenType::FOR;
-		} else if (token->value == "do") {
-			token->type = TokenType::DO;
-		} else if (token->value == "print") {
-			token->type = TokenType::PRINT;
-		}
-	}
 }
 
 std::vector<Token*>* Flexer::getTokens(std::string content) {
  	std::vector<Token*> *result = new std::vector<Token*>();
-	this->position = 0;
 	int p = 0;
 	Token *token; 
 

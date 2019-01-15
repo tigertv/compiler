@@ -7,10 +7,6 @@
 #include "../flex/clexer.h"
 
 class Flexer {
-	bool inToken;
-	Token *token;
-	void checkID();
-	int position;
 public:
 	Flexer();
 	std::vector<Token*>* getTokens(std::string content);
