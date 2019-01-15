@@ -1,7 +1,7 @@
 all/
 build/
-flex/*
-!flex/*.lex
+src/flex/*
+!src/flex/*.lex
 tests/*
 !tests/*.calc
 *.swp

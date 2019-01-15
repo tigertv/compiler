@@ -1,6 +1,6 @@
 APP = compiler
 CXX = g++
-FLAGS = -std=c++17 -Wall -I ./include
+FLAGS = -std=c++17 -Wall -I ./src/include
 SRC_DIR = src
 SRC = $(wildcard $(SRC_DIR)/*.cpp)
 BIN_DIR = build
@@ -25,7 +25,7 @@ $(APP): $(BIN_DIR) $(OBJ) lexer
 $(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp 
 	$(CXX) $(FLAGS) -c $< -o $@
 clean: test-clean
-	rm -rf $(BIN_DIR) $(APP) flex/lex.yy.cpp flex/clexer.h
+	rm -rf $(BIN_DIR) $(APP) src/flex/lex.yy.cpp src/flex/clexer.h
 test-clean:
 	rm -f $(TSTDIR)/*.asm $(TSTDIR)/*.out $(TSTDIR)/*.o $(TESTS)
 
@@ -40,8 +40,8 @@ $(TESTS): % : %.$(EXT) %.tst
 	nasm -f elf $@.asm
 	ld -melf_i386 $@.o -o $@
 
-lexer: flex/1.lex $(BIN_DIR)
-	flex --header-file=flex/clexer.h -o flex/lex.yy.cpp flex/1.lex 
-	g++ -std=c++17 flex/lex.yy.cpp -c -o build/clexer.o
+lexer: src/flex/1.lex $(BIN_DIR)
+	flex --header-file=src/flex/clexer.h -o src/flex/lex.yy.cpp src/flex/1.lex 
+	g++ -std=c++17 src/flex/lex.yy.cpp -c -o build/clexer.o
 
 #ld -lc -melf_i386 -dynamic-linker /lib/ld-linux.so.2 $< -o $@
