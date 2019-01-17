@@ -32,10 +32,10 @@ test-clean:
 test: $(TESTS) 
 	@for item in $(TESTS); do \
 		./$$item > $$item.out; \
-		if diff -u ./$$item.out ./$$item.tst; then echo "Test $$item is OK"; else echo "Warning!!! Test $$item is failed!!!"; fi \
+		if diff -u ./$$item.out ./$$item.test; then echo "Test $$item is OK"; else echo "Warning!!! Test $$item is failed!!!"; fi \
 	done
 
-$(TESTS): % : %.$(EXT) %.tst 
+$(TESTS): % : %.$(EXT) %.test 
 	./$(APP) $< $@.asm
 	nasm -f elf $@.asm
 	ld -melf_i386 $@.o -o $@
