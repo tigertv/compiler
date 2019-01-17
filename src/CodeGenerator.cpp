@@ -32,8 +32,7 @@ void CodeGenerator::compile(Node* ast) {
 
 				compile(ast->left);
 
-				outfile << "mov esp, ebp" << endl;
-				outfile << "pop ebp" << endl;
+				outfile << "leave" << endl;
 				this->currentSymbolTable = temp;
 			}
 			break;
@@ -268,13 +267,10 @@ void CodeGenerator::compile(Node* ast) {
 
 			// prologue
 			outfile << "fn_" << ast->value << ":" << endl << endl;
-			outfile << "push ebp" << endl;
-			outfile << "mov ebp, esp" << endl << endl;
 
 			compile(ast->left);
 
 			// epilogue
-			outfile << "leave" << endl;
 			outfile << "ret" << endl;
 			outfile << endl;
 			break;
@@ -325,8 +321,7 @@ void CodeGenerator::compile(Node* ast) {
 
 				compile(ast->left);
 
-				outfile << "mov esp, ebp" << endl;
-				outfile << "pop ebp" << endl;
+				outfile << "leave" << endl;
 				this->currentSymbolTable = temp;
 
 			// exit
