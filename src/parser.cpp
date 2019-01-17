@@ -49,6 +49,9 @@ Node* Parser::parse(std::vector<Token*> *tokens) {
 	Node* prog = new Node();
 	prog->type = NodeType::N_PROG;
 	prog->value = "PROG";
+	prog->symbolTable = new SymbolTable();
+	this->scopes.push_back(prog->symbolTable);
+
 	this->prog = prog;
 
 	do {
@@ -66,6 +69,8 @@ Node* Parser::parse(std::vector<Token*> *tokens) {
 		token = getCurrentToken();
 	} while(token);
 
+	this->scopes.pop_back();
+
 	prog->left = node;
 
 	cout << "parse: end of parsing" << endl;
@@ -79,15 +84,16 @@ Node* Parser::statement() {
 
 	Node* node = nullptr;
 	Token *token = getCurrentToken();
+	if (!token) {
+		printError("A token expected in statement");
+	}
 
 	switch(token->type) {
 		case TokenType::T_FUNC: 
 			{
-				//Node* pr = this->prog;
-
 				token = nextToken();
 
-				if (token->type != TokenType::T_ID) {
+				if (!token || token->type != TokenType::T_ID) {
 					printError("An id expected in function statement.");
 				}
 
@@ -105,36 +111,12 @@ Node* Parser::statement() {
 					printError("A right parenthes expected in function statement.");
 				}
 
-				if (!expect(TokenType::T_LBRACE)) {
-					printError("A left brace expected in function statement.");
-				}
-
 				Node* func = node;
-				node = nullptr;
 				Node* temp;
-				token = getCurrentToken();
-
-				while(token && token->type != TokenType::T_RBRACE) {
-					temp = node;
-
-					node = new Node();
-					node->type = NodeType::N_SEQ;
-					node->value = "SEQ";
-
-					node->left = temp;
-					node->right = statement();
-					token = getCurrentToken();
-				}
-
-				func->left = node;
+				func->left = block();
 				temp = prog->right;
 				prog->right = func;
 				func->right = temp;
-
-				if (!expect(TokenType::T_RBRACE)) {
-					printError("A right brace expected in function statement.");
-				}
-
 				node = nullptr;
 			}
 
@@ -204,13 +186,17 @@ Node* Parser::statement() {
 					node->type = NodeType::N_ASSIGN;
 					node->value = "SET";
 					node->left = temp;
+					// add to symbol table if it doesn't exist
+					SymbolTable* table = this->scopes.back();
+					if (!table->isSymbolExist(temp->value) ) {
+						table->addSymbol(temp->value); 
+					}
+
 					node->right = expression();
 
-					//*
 					if (!this->expect(TokenType::T_SEMICOLON)) {
 						printError("A semicolon expected in statement.");
 					}
-					//*/
 
 				// function call statement
 				} else if (this->expect(TokenType::T_LPAR) ) {
@@ -390,9 +376,41 @@ Node* Parser::term() {
 	return node;
 }
 
-/*
-Node* block() {
-	Node* node = new Node();
-	return node;
+Node* Parser::block() {
+
+	if (!expect(TokenType::T_LBRACE)) {
+		printError("A left brace expected in block.");
+	}
+
+	Node* block = new Node();
+	block->type = NodeType::N_BLOCK;
+	block->value = "BLOCK"; 
+	block->symbolTable = new SymbolTable();
+	block->right = nullptr;
+
+	this->scopes.push_back(block->symbolTable);
+
+	Node* temp;
+	Node* node = nullptr;
+	Token* token = getCurrentToken();
+
+	while(token && token->type != TokenType::T_RBRACE) {
+		temp = node;
+
+		node = new Node();
+		node->type = NodeType::N_SEQ;
+		node->value = "SEQ";
+		node->left = temp;
+		node->right = statement();
+		token = getCurrentToken();
+	}
+
+	if (!expect(TokenType::T_RBRACE)) {
+		printError("A right brace expected in block.");
+	}
+
+	this->scopes.pop_back();
+
+	block->left = node;
+	return block;
 }
-//*/

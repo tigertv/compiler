@@ -1,6 +1,6 @@
 APP = compiler
 CXX = g++
-FLAGS = -std=c++17 -Wall -I ./src/include
+FLAGS = -std=c++17 -Wall -I ./src/include -g
 SRC_DIR = src
 SRC = $(wildcard $(SRC_DIR)/*.cpp)
 BIN_DIR = build

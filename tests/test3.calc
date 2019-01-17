@@ -1,0 +1,17 @@
+fn get() {
+	k = 2+8;
+	i = 90;
+	ret i+k;
+}
+
+fn get2() {
+	b = 300;
+	ret 3+b;
+}
+
+j = get();
+s = 0;
+k = get2();
+print(k);
+k = k;
+print(k);

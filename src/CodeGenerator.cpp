@@ -20,34 +20,37 @@ void CodeGenerator::compile(Node* ast) {
 			compile(ast->right);
 			outfile << endl;
 			break;
+
+		case NodeType::N_BLOCK:
+			{
+				SymbolTable *temp = this->currentSymbolTable;
+				this->currentSymbolTable = ast->symbolTable;
+
+				outfile << "push ebp" << endl;
+				outfile << "mov ebp, esp" << endl;
+				outfile << "sub esp, " << 4 * this->currentSymbolTable->getSize() << endl;
+
+				compile(ast->left);
+
+				outfile << "mov esp, ebp" << endl;
+				outfile << "pop ebp" << endl;
+				this->currentSymbolTable = temp;
+			}
+			break;
 			
 		case NodeType::N_ASSIGN:
 			{
-				bool inVars = false;
-				int size = variables.size();
-				int i=0;
-				for (;i<size;i++) {
-					if (ast->left->value == variables[i]) {
-						inVars = true;
-						break;
-					}
-				}
-
-				if (!inVars) {
-					outfile << "sub esp, 4" << endl;
-					variables.push_back(ast->left->value);
-				}
+				// find symbol in current symbol table
+				SymbolTable* table = this->currentSymbolTable;
+				int index = table->getSymbolIndex(ast->left->value);  
 
 				if ( ast->right->type == NodeType::N_NUMBER_C || ast->right->type == NodeType::N_ID)
 					outfile << "mov eax, ";
+
 				compile(ast->right);
 
 				outfile << endl;
-				if (!inVars) {
-					outfile << "mov DWORD [ebp-" << 4*(size+1)  << "], eax" << endl;
-				} else {
-					outfile << "mov DWORD [ebp-" << 4*(i+1)  << "], eax" << endl;
-				}
+				outfile << "mov DWORD [ebp-" << 4*(index+1)  << "], eax" << endl;
 				outfile << endl;
 			}
 
@@ -245,18 +248,12 @@ void CodeGenerator::compile(Node* ast) {
 
 		case NodeType::N_ID:
 			{
-				bool isDefined = false;
-				int size = variables.size();
-				for(int i=0;i<size;i++) {
-					if (variables[i] == ast->value) {
-						outfile << "DWORD [ebp-" << 4*i+4 << "]";
-						isDefined = true;
-						break;
-					}
-				}
-
-				if(!isDefined) {
-					cout << "Unexpected variable \"" << ast->value << "\"" << endl;
+				SymbolTable* table = this->currentSymbolTable;
+				int index = table->getSymbolIndex(ast->value);  
+				if (index >= 0) {
+					outfile << "DWORD [ebp-" << (4*index) + 4 << "]";
+				} else {
+					cout << "Unexpected variable \"" << ast->value << "\" in compile:N_ID" << endl;
 					exit(1);
 				}
 			}
@@ -277,8 +274,7 @@ void CodeGenerator::compile(Node* ast) {
 			compile(ast->left);
 
 			// epilogue
-			outfile << "mov esp, ebp" << endl;
-			outfile << "pop ebp" << endl;
+			outfile << "leave" << endl;
 			outfile << "ret" << endl;
 			outfile << endl;
 			break;
@@ -295,6 +291,7 @@ void CodeGenerator::compile(Node* ast) {
 			break;
 
 		case NodeType::N_PROG:
+			this->currentSymbolTable = ast->symbolTable;
 			// prologue
 			outfile << "BITS 32" << endl;
 			outfile << "global _start" << endl;
@@ -359,13 +356,6 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << "int 0x80" << endl;
 
 			outfile << "ret" << endl;
-
-			/*
-			for(int i=0;i<variables.size();i++) {
-				outfile << "\toutfile << \"" << variables[i] << "=\" << " << variables[i] << " << endl;" << endl;
-			}
-			outfile << "" << endl;
-			//*/
 
 		/*
 		default:

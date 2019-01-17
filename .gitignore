@@ -4,6 +4,7 @@ src/flex/*
 !src/flex/*.lex
 tests/*
 !tests/*.calc
+!tests/*.tst
 *.swp
 *.o
 compiler

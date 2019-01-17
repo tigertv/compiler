@@ -1,14 +1,17 @@
 #ifndef CODE_GENERATOR_H 
 #define CODE_GENERATOR_H 
 
-#include "node.h"
 #include <vector>
 #include <string>
 #include <fstream>
+#include "node.h"
+#include "SymbolTable.h"
 
 class CodeGenerator{
 	std::vector<std::string> variables;
 	std::ofstream outfile;
+	SymbolTable* currentSymbolTable = nullptr;
+
 public:
 	CodeGenerator(std::string ofile);
 	~CodeGenerator();

@@ -63,6 +63,7 @@ int main(int argc, char* argv[]) {
 
 	traverse(ast);
 
+	//*
 	cout << "+++++ after traverse ast ++++" << endl;
 	
 	if (argv[2]) {
@@ -72,6 +73,7 @@ int main(int argc, char* argv[]) {
 		CodeGenerator generator("output.asm");
 		generator.compile(ast);
 	}
+	//*/
 
 	//delete(tokens);
 	//delete(lexer);
