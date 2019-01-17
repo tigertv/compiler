@@ -315,16 +315,19 @@ void CodeGenerator::compile(Node* ast) {
 			outfile << ";==== FUNCTIONS ======" << endl;
 
 			outfile << "_start:" << endl << endl;
-			outfile << "push ebp" << endl;
-			outfile << "mov ebp,esp" << endl;
-			outfile << endl;
 
-			compile(ast->left);
+				SymbolTable *temp = this->currentSymbolTable;
+				this->currentSymbolTable = ast->symbolTable;
 
-			// epilogue
-			outfile << "mov esp, ebp" << endl;
-			outfile << "pop ebp" << endl;
-			outfile << endl;
+				outfile << "push ebp" << endl;
+				outfile << "mov ebp, esp" << endl;
+				outfile << "sub esp, " << 4 * this->currentSymbolTable->getSize() << endl;
+
+				compile(ast->left);
+
+				outfile << "mov esp, ebp" << endl;
+				outfile << "pop ebp" << endl;
+				this->currentSymbolTable = temp;
 
 			// exit
 			outfile << "mov eax, 1" << endl;
