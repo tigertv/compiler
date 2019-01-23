@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 	Flexer lexer;
 	vector<Token*> *tokens = lexer.getTokens(content);
 	
-	for (uint i=0;i<tokens->size();i++) {
+	for (int i=0;i<tokens->size();i++) {
 		cout << tokens->at(i)->type << " " << tokens->at(i)->value << endl;
 	}
 

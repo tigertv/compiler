@@ -98,6 +98,11 @@ std::vector<Token*>* Flexer::getTokens(std::string content) {
 			result->push_back(token);
 			break;
 
+		case T_COMMA:
+			token->value = ",";
+			result->push_back(token);
+			break;
+
 		default:
 			break;
 		}

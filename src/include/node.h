@@ -16,6 +16,7 @@ public:
 	SymbolTable *symbolTable = nullptr;
 	NodeType type;
 	std::string value;
+	Node *args = nullptr;
 };
 
 #endif

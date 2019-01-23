@@ -252,8 +252,27 @@ void CodeGenerator::compile(Node* ast) {
 				if (index >= 0) {
 					outfile << "DWORD [ebp-" << (4*index) + 4 << "]";
 				} else {
-					cout << "Unexpected variable \"" << ast->value << "\" in compile:N_ID" << endl;
-					exit(1);
+					// check input params in current function
+
+					Node* args = this->currentFunction->args;
+					index = 0;
+					bool inFunctionArgs = false;
+
+					while(args) {
+						if (args->value == ast->value) {
+							inFunctionArgs = true;
+							break;
+						}
+						args = args->args;
+						index++;
+					}
+					
+					if (inFunctionArgs){
+						outfile << "DWORD [ebp+" << (4*index) + 8 << "]";
+					} else {
+						cout << "Unexpected variable \"" << ast->value << "\" in compile:N_ID" << endl;
+						exit(1);
+					}
 				}
 			}
 			break;
@@ -263,6 +282,8 @@ void CodeGenerator::compile(Node* ast) {
 			break;
 
 		case NodeType::N_FUNC:
+			this->currentFunction = ast;
+
 			compile(ast->right);
 
 			// prologue
@@ -283,10 +304,28 @@ void CodeGenerator::compile(Node* ast) {
 
 		case NodeType::N_FUNC_CALL:
 			// prologue
-			outfile << "call fn_" << ast->value << endl;
+			{
+				Node* temp = ast;
+				while(temp->args) {
+
+					if ( temp->args->type == NodeType::N_NUMBER_C || temp->args->type == NodeType::N_ID) {
+						outfile << "push ";
+						this->compile(temp->args);
+					} else {
+						this->compile(temp->args);
+						outfile << endl;
+						outfile << "push eax";
+					}
+
+					outfile << endl;
+					temp = temp->args;
+				}
+				outfile << "call fn_" << ast->value << endl;
+			}
 			break;
 
 		case NodeType::N_PROG:
+			this->currentFunction = ast;
 			this->currentSymbolTable = ast->symbolTable;
 			// prologue
 			outfile << "BITS 32" << endl;

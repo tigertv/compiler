@@ -89,6 +89,7 @@ Node* Parser::statement() {
 	}
 
 	switch(token->type) {
+
 		case TokenType::T_FUNC: 
 			{
 				token = nextToken();
@@ -107,12 +108,35 @@ Node* Parser::statement() {
 					printError("A left parenthes expected in function statement.");
 				}
 
+				////////////////////////////////////////////
+
+				Node* func = node;
+				Node* temp = node;
+				token = getCurrentToken();
+
+				while(token && token->type == TokenType::T_ID) {
+					node = new Node();
+					node->type = NodeType::N_ID; // FUNC_ARG
+					node->value = token->value;
+
+					temp->args = node;
+					temp = temp->args;
+
+					nextToken();
+
+					if (!expect(TokenType::T_COMMA)) {
+						break;
+					}
+
+					token = getCurrentToken();
+				}
+
+				////////////////////////////////////////////
+
 				if (!expect(TokenType::T_RPAR)) {
 					printError("A right parenthes expected in function statement.");
 				}
 
-				Node* func = node;
-				Node* temp;
 				func->left = block();
 				temp = prog->right;
 				prog->right = func;
@@ -203,8 +227,25 @@ Node* Parser::statement() {
 					node = new Node();
 					node->type = NodeType::N_FUNC_CALL;
 					node->value = token->value;
-					node->left = temp;
-					node->right = expression();
+
+					///////////////////////////////////////////////
+					// function params
+
+					Node* temp;
+					Node* tail = expression();
+					
+					token = getCurrentToken();
+
+					while(token && token->type == TokenType::T_COMMA) {
+						nextToken();
+						temp = expression();
+						temp->args = tail;
+						tail = temp;
+						token = getCurrentToken();
+					}
+					node->args = tail;
+
+					///////////////////////////////////////////////
 
 					if(this->expect(TokenType::T_RPAR) ) {
 
@@ -291,12 +332,30 @@ Node* Parser::factor() {
 		case TokenType::T_ID:
 			{
 				node = new Node();
-				Token* temp = nextToken();
-				if (temp->type == TokenType::T_LPAR) {
+				Token* ttoken = nextToken();
+				if (ttoken->type == TokenType::T_LPAR) {
 					nextToken();
 					node->type = NodeType::N_FUNC_CALL;
 					node->value = token->value;
-					node->left = expression();
+
+					///////////////////////////////////////////////
+					// function params
+
+					Node* temp;
+					Node* tail = expression();
+					
+					token = getCurrentToken();
+
+					while(token && token->type == TokenType::T_COMMA) {
+						nextToken();
+						temp = expression();
+						temp->args = tail;
+						tail = temp;
+						token = getCurrentToken();
+					}
+					node->args = tail;
+
+					///////////////////////////////////////////////
 					
 					if(!this->expect(TokenType::T_RPAR) ) {
 						printError("A right parenthesis expected in funcion call.");

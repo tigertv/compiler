@@ -1,13 +1,13 @@
-fn get() {
+fn get(s) {
 	i = 7;
-	ret 90+2+i;
+	ret s+i;
 }
 
 fn get2() {
 	ret 123;
 }
 
-j = get();
+j = get(90+2);
 s = 0;
 j = get2();
 print(j);

@@ -38,8 +38,9 @@
 
 <COMMENT_MULTI>. { 
 	/* suppress whatever is in the comment */
-} 
+}
 
+","		return T_COMMA;
 "++"	return T_INC;
 "--"	return T_DEC;
 "="		return T_ASSIGN;
@@ -72,7 +73,8 @@ false	return T_BOOL;
 			return T_NUMBER;
 		}
 
-[ \t\n]		; // space
+[ \t\n]		{ // space 
+			}
 
 <<EOF>> {
 			return 0;

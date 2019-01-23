@@ -1,0 +1,7 @@
+fn add(a, b, c) {
+	ret a+b;
+}
+
+i = 2;
+j = add(4*7-5*5, i+i*2-1, 10);
+print(j);
