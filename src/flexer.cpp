@@ -103,6 +103,41 @@ std::vector<Token*>* Flexer::getTokens(std::string content) {
 			result->push_back(token);
 			break;
 
+		case T_IF:
+			token->value = "IF";
+			result->push_back(token);
+			break;
+
+		case T_LESS:
+			token->value = "LESS";
+			result->push_back(token);
+			break;
+
+		case T_NLESS:
+			token->value = "NLESS";
+			result->push_back(token);
+			break;
+
+		case T_GREATER:
+			token->value = "GREATER";
+			result->push_back(token);
+			break;
+
+		case T_NGREATER:
+			token->value = "NGREATER";
+			result->push_back(token);
+			break;
+
+		case T_EQU:
+			token->value = "EQU";
+			result->push_back(token);
+			break;
+
+		case T_NEQU:
+			token->value = "NEQU";
+			result->push_back(token);
+			break;
+
 		default:
 			break;
 		}

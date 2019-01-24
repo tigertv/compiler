@@ -12,6 +12,7 @@ class CodeGenerator{
 	std::ofstream outfile;
 	SymbolTable* currentSymbolTable = nullptr;
 	Node* currentFunction = nullptr;
+	int label = 0;
 
 public:
 	CodeGenerator(std::string ofile);

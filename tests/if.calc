@@ -1,0 +1,81 @@
+fn get(a, b) {
+	i = b;
+	ret a+i;
+}
+
+j = get(6,44);
+
+if (j == 49) {
+	print(1);
+}
+
+if (j == 50) {
+	k = 2;
+	print(k);
+}
+
+if (j == 51) {
+	print(3);
+}
+
+if (j != 49) {
+	print(4);
+}
+
+if (j != 50) {
+	print(5);
+}
+
+if (j != 51) {
+	print(6);
+}
+
+if (j > 49) {
+	print(7);
+}
+
+if (j > 50) {
+	print(8);
+}
+
+if (j > 51) {
+	print(9);
+}
+
+if (j !> 49) {
+	print(10);
+}
+
+if (j !> 50) {
+	print(11);
+}
+
+if (j !> 51) {
+	print(12);
+}
+
+if (j < 49) {
+	print(13);
+}
+
+if (j < 50) {
+	print(14);
+}
+
+if (j < 51) {
+	print(15);
+}
+
+if (j !< 49) {
+	print(16);
+}
+
+if (j !< 50) {
+	print(17);
+}
+
+if (j !< 51) {
+	print(18);
+}
+
+print(100);

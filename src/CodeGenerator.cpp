@@ -16,9 +16,63 @@ void CodeGenerator::compile(Node* ast) {
 
 	switch(ast->type) {
 		case NodeType::N_SEQ:
-			compile(ast->left);
-			compile(ast->right);
-			outfile << endl;
+			{
+				compile(ast->left);
+				compile(ast->right);
+				outfile << endl;
+			}
+			break;
+
+		case NodeType::N_IF:
+			{
+				outfile << "; N_IF" << endl;
+
+				Node* condition = ast->left;
+
+				outfile << "mov eax, ";
+				compile(condition->left);
+				outfile << endl;
+				outfile << "mov edx, eax" << endl;
+				outfile << "mov eax, ";
+				compile(condition->right);
+				outfile << endl;
+				outfile << "cmp edx, eax" << endl;
+
+				this->label++;
+
+				switch(condition->type) {
+				case NodeType::N_EQU:
+					outfile << "jnz .L" << this->label << endl;
+					break;
+					
+				case NodeType::N_NEQU:
+					outfile << "jz .L" << this->label << endl;
+					break;
+					
+				case NodeType::N_LESS:
+					outfile << "jnl .L" << this->label << endl;
+					break;
+
+				case NodeType::N_NLESS:
+					outfile << "jl .L" << this->label << endl;
+					break;
+
+				case NodeType::N_GREATER:
+					outfile << "jng .L" << this->label << endl;
+					break;
+
+				case NodeType::N_NGREATER:
+					outfile << "jg .L" << this->label << endl;
+					break;
+
+				default:
+					cout << "Error in compile condition" << endl;
+					break;
+				}
+
+				compile(ast->right);
+				outfile << ".L"<< this->label << ": ; END N_IF" << endl;
+			}
 			break;
 
 		case NodeType::N_BLOCK:

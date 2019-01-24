@@ -166,7 +166,25 @@ Node* Parser::statement() {
 			break;
 			
 		case TokenType::T_IF: 
-			std::cout << "if token" << std::endl;
+			{
+				node = new Node();
+				node->type = NodeType::N_IF;
+				node->value = "IF";
+				nextToken();
+
+				if (!expect(TokenType::T_LPAR)) {
+					printError("A left parenthes expected in if-statement.");
+				} 
+
+				node->left = this->condition();
+				
+				if (!expect(TokenType::T_RPAR)) {
+					Token* tok = getCurrentToken();
+					printError("A right parenthes expected in if-statement.");
+				} 
+
+				node->right = block();
+			}
 			break;
 			
 		case TokenType::T_PRINT: 
@@ -472,4 +490,52 @@ Node* Parser::block() {
 
 	block->left = node;
 	return block;
+}
+
+Node* Parser::condition() {
+
+	Node* node = new Node();
+	node->left = expression();
+	Token* token = getCurrentToken();
+
+	switch(token->type) {
+	case TokenType::T_EQU:
+		node->type = NodeType::N_EQU;
+		node->value = "EQU";
+		break;
+
+	case TokenType::T_NEQU:
+		node->type = NodeType::N_NEQU;
+		node->value = "NEQU";
+		break;
+
+	case TokenType::T_LESS:
+		node->type = NodeType::N_LESS;
+		node->value = "LESS";
+		break;
+
+	case TokenType::T_NLESS:
+		node->type = NodeType::N_NLESS;
+		node->value = "NLESS";
+		break;
+
+	case TokenType::T_GREATER:
+		node->type = NodeType::N_GREATER;
+		node->value = "GREATER";
+		break;
+
+	case TokenType::T_NGREATER:
+		node->type = NodeType::N_NGREATER;
+		node->value = "NGREATER";
+		break;
+
+	default:
+		printError("A bool operators expected in condition.");
+		break;
+	}
+
+	nextToken();
+	node->right = expression();
+
+	return node;
 }

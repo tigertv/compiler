@@ -23,6 +23,7 @@ class Parser {
 	Node* term();
 	Node* factor();
 	Node* block();
+	Node* condition();
 
 public:
 	Parser();

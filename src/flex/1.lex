@@ -40,9 +40,15 @@
 	/* suppress whatever is in the comment */
 }
 
-","		return T_COMMA;
+"=="	return T_EQU;
+"!<"	return T_NLESS;
+"!>"	return T_NGREATER;
+"!="	return T_NEQU;
 "++"	return T_INC;
 "--"	return T_DEC;
+">"		return T_GREATER;
+"<"		return T_LESS;
+","		return T_COMMA;
 "="		return T_ASSIGN;
 ";"		return T_SEMICOLON;
 "("		return T_LPAR;
@@ -56,6 +62,7 @@
 fn		return T_FUNC;
 ret		return T_RET;
 for		return T_FOR;
+if		return T_IF;
 print	return T_PRINT;
 while	return T_WHILE;
 do		return T_DO;
