@@ -67,6 +67,7 @@ void CodeGenerator::compile(Node* ast) {
 
 				default:
 					cout << "Error in compile condition" << endl;
+					exit(1);
 					break;
 				}
 
