@@ -364,7 +364,9 @@ void CodeGenerator::compile(Node* ast) {
 			// prologue
 			{
 				Node* temp = ast;
+				int count = 0;
 				while(temp->args) {
+					count++;
 
 					if ( temp->args->type == NodeType::N_NUMBER_C || temp->args->type == NodeType::N_ID) {
 						outfile << "push ";
@@ -378,7 +380,13 @@ void CodeGenerator::compile(Node* ast) {
 					outfile << endl;
 					temp = temp->args;
 				}
+
 				outfile << "call fn_" << ast->value << endl;
+
+				// free arguments from stack
+				if (count > 0) {
+					outfile << "add esp, " <<  count*4 << endl;
+				}
 			}
 			break;
 
