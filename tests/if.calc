@@ -4,17 +4,18 @@ fn get(a, b) {
 }
 
 j = get(6,44);
+c = 10;
 
-if (j == 49) {
+if (j == 30+c+9) {
 	print(1);
 }
 
-if (j == 50) {
+if (j == 5*c) {
 	k = 2;
 	print(k);
 }
 
-if (j == 51) {
+if (j == 5+5*c-4) {
 	print(3);
 }
 

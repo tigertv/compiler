@@ -29,11 +29,14 @@ void CodeGenerator::compile(Node* ast) {
 
 				Node* condition = ast->left;
 
-				outfile << "mov eax, ";
+				if ( condition->left->type == NodeType::N_NUMBER_C || condition->left->type == NodeType::N_ID)
+					outfile << "mov eax, ";
 				compile(condition->left);
 				outfile << endl;
 				outfile << "mov edx, eax" << endl;
-				outfile << "mov eax, ";
+
+				if ( condition->right->type == NodeType::N_NUMBER_C || condition->right->type == NodeType::N_ID)
+					outfile << "mov eax, ";
 				compile(condition->right);
 				outfile << endl;
 				outfile << "cmp edx, eax" << endl;
@@ -66,7 +69,7 @@ void CodeGenerator::compile(Node* ast) {
 					break;
 
 				default:
-					cout << "Error in compile condition" << endl;
+					cout << "Error in compile if-condition" << endl;
 					exit(1);
 					break;
 				}
