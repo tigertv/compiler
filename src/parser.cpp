@@ -201,13 +201,23 @@ Node* Parser::statement() {
 					printError("A left parenthes expected in if-statement.");
 				} 
 
-				node->left = this->condition();
+				node->args = this->condition();
 				
 				if (!expect(TokenType::T_RPAR)) {
 					printError("A right parenthes expected in if-statement.");
 				} 
 
-				node->right = block();
+				node->left = block();
+
+				if (expect(TokenType::T_ELSE)) {
+					Token* token = this->getCurrentToken();
+					if (token) { 
+						if (token->type == TokenType::T_IF) 
+							node->right = statement();
+						else 
+							node->right = block();
+					}
+				}
 			}
 			break;
 			

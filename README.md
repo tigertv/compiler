@@ -1,5 +1,12 @@
 # Compiler
 
+Released:
+- variables, simple scope
+- functions, print function
+- calculation: addition, subtruction, multiplication, division
+- if-else (simple, ==, !=, <, !<, >, !>) 
+- only integers as operands and arguments for functions
+
 It uses `ld` and `nasm` as backend.
 
 Build the compiler:

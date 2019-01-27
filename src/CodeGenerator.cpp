@@ -25,9 +25,9 @@ void CodeGenerator::compile(Node* ast) {
 
 		case NodeType::N_IF:
 			{
-				outfile << "; N_IF" << endl;
+				outfile << "; IF " << endl;
 
-				Node* condition = ast->left;
+				Node* condition = ast->args;
 
 				if ( condition->left->type == NodeType::N_NUMBER_C || condition->left->type == NodeType::N_ID)
 					outfile << "mov eax, ";
@@ -74,8 +74,19 @@ void CodeGenerator::compile(Node* ast) {
 					break;
 				}
 
-				compile(ast->right);
-				outfile << ".L"<< this->label << ": ; END N_IF" << endl;
+				int endLabel = this->label;
+				compile(ast->left);
+
+				if (ast->right) {
+					outfile << "jmp .LE"<< this->label << endl;
+				}
+
+				outfile << ".L"<< this->label << ": ; END IF" << endl;
+				// ELSE begins
+				if (ast->right) {
+					compile(ast->right);
+					outfile << ".LE"<< endLabel << ": ; END ELSE-IF" << endl;
+				}
 			}
 			break;
 

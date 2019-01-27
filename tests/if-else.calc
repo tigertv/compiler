@@ -1,0 +1,44 @@
+
+if(4 == 4) {
+	print(1);
+} else {
+	print(2);
+}
+
+if(4 != 4) {
+	print(1);
+} else {
+	print(2);
+}
+
+j = 6;
+
+if(j > 5) {
+	print(11);
+} else if (j == 5) {
+	print(12);
+} else {
+	print(13);
+}
+
+j = 5;
+
+if(j > 5) {
+	print(21);
+} else if (j == 5) {
+	print(22);
+} else {
+	print(23);
+}
+
+j = 4;
+
+if(j > 5) {
+	print(31);
+} else if (j == 5) {
+	print(32);
+} else {
+	print(33);
+}
+
+print(100);
