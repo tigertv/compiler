@@ -18,12 +18,14 @@ class Parser {
 	void printError(std::string text);
 	bool expect(TokenType type);
 
+	Node* statements();
 	Node* statement();
 	Node* expression();
 	Node* term();
 	Node* factor();
 	Node* block();
 	Node* condition();
+	Node* functionArgs();
 
 public:
 	Parser();

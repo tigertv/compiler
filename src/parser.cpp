@@ -42,9 +42,6 @@ Node* Parser::parse(std::vector<Token*> *tokens) {
 	using std::endl;
 
 	t = tokens;
-	Node* temp = nullptr;	
-	Node* node = nullptr;
-	Token* token;
 
 	Node* prog = new Node();
 	prog->type = NodeType::N_PROG;
@@ -53,6 +50,21 @@ Node* Parser::parse(std::vector<Token*> *tokens) {
 	this->scopes.push_back(prog->symbolTable);
 
 	this->prog = prog;
+	prog->left = statements();
+
+	this->scopes.pop_back();
+
+	cout << "parse: end of parsing" << endl;
+
+	return prog;
+}
+
+Node* Parser::statements() {
+
+	/*
+	Node* temp;
+	Token* token;
+	Node* node = nullptr;
 
 	do {
 		temp = node;
@@ -68,15 +80,28 @@ Node* Parser::parse(std::vector<Token*> *tokens) {
 		}
 		token = getCurrentToken();
 	} while(token);
+	//*/
 
-	this->scopes.pop_back();
+	////////////////////////////////
 
-	prog->left = node;
+	Node* temp;
+	Node* node = nullptr;
+	Token* token = getCurrentToken();
 
-	cout << "parse: end of parsing" << endl;
+	while(token && token->type != TokenType::T_RBRACE) {
+		temp = node;
 
-	return prog;
+		node = new Node();
+		node->type = NodeType::N_SEQ;
+		node->value = "SEQ";
+		node->left = temp;
+		node->right = statement();
+		token = getCurrentToken();
+	}
+
+	return node;
 }
+
 
 Node* Parser::statement() {
 	using std::cout;
@@ -179,7 +204,6 @@ Node* Parser::statement() {
 				node->left = this->condition();
 				
 				if (!expect(TokenType::T_RPAR)) {
-					Token* tok = getCurrentToken();
 					printError("A right parenthes expected in if-statement.");
 				} 
 
@@ -246,24 +270,7 @@ Node* Parser::statement() {
 					node->type = NodeType::N_FUNC_CALL;
 					node->value = token->value;
 
-					///////////////////////////////////////////////
-					// function params
-
-					Node* temp;
-					Node* tail = expression();
-					
-					token = getCurrentToken();
-
-					while(token && token->type == TokenType::T_COMMA) {
-						nextToken();
-						temp = expression();
-						temp->args = tail;
-						tail = temp;
-						token = getCurrentToken();
-					}
-					node->args = tail;
-
-					///////////////////////////////////////////////
+					node->args = this->functionArgs();
 
 					if(this->expect(TokenType::T_RPAR) ) {
 
@@ -337,6 +344,24 @@ Node* Parser::expression() {
 	return node;
 }
 
+Node* Parser::functionArgs() {
+
+	Node* temp;
+	Node* tail = expression();
+	
+	Token* token = getCurrentToken();
+
+	while(token && token->type == TokenType::T_COMMA) {
+		nextToken();
+		temp = expression();
+		temp->args = tail;
+		tail = temp;
+		token = getCurrentToken();
+	}
+
+	return tail;
+}
+
 Node* Parser::factor() {
 	Node* node = nullptr;
 	Token *token = getCurrentToken();
@@ -356,24 +381,7 @@ Node* Parser::factor() {
 					node->type = NodeType::N_FUNC_CALL;
 					node->value = token->value;
 
-					///////////////////////////////////////////////
-					// function params
-
-					Node* temp;
-					Node* tail = expression();
-					
-					token = getCurrentToken();
-
-					while(token && token->type == TokenType::T_COMMA) {
-						nextToken();
-						temp = expression();
-						temp->args = tail;
-						tail = temp;
-						token = getCurrentToken();
-					}
-					node->args = tail;
-
-					///////////////////////////////////////////////
+					node->args = this->functionArgs();
 					
 					if(!this->expect(TokenType::T_RPAR) ) {
 						printError("A right parenthesis expected in funcion call.");
@@ -467,20 +475,7 @@ Node* Parser::block() {
 
 	this->scopes.push_back(block->symbolTable);
 
-	Node* temp;
-	Node* node = nullptr;
-	Token* token = getCurrentToken();
-
-	while(token && token->type != TokenType::T_RBRACE) {
-		temp = node;
-
-		node = new Node();
-		node->type = NodeType::N_SEQ;
-		node->value = "SEQ";
-		node->left = temp;
-		node->right = statement();
-		token = getCurrentToken();
-	}
+	Node* st = statements();
 
 	if (!expect(TokenType::T_RBRACE)) {
 		printError("A right brace expected in block.");
@@ -488,7 +483,7 @@ Node* Parser::block() {
 
 	this->scopes.pop_back();
 
-	block->left = node;
+	block->left = st;
 	return block;
 }
 
