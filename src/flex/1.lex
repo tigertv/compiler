@@ -40,35 +40,122 @@
 	/* suppress whatever is in the comment */
 }
 
-"=="	return T_EQU;
-"!<"	return T_NLESS;
-"!>"	return T_NGREATER;
-"!="	return T_NEQU;
-"++"	return T_INC;
-"--"	return T_DEC;
-">"		return T_GREATER;
-"<"		return T_LESS;
-","		return T_COMMA;
-"="		return T_ASSIGN;
-";"		return T_SEMICOLON;
-"("		return T_LPAR;
-")"		return T_RPAR;
-"{"		return T_LBRACE;
-"}"		return T_RBRACE;
-"+"		return T_ADD;
-"-"		return T_SUB;
-"/"		return T_DIV;
-"*"		return T_MUL;
-fn		return T_FUNC;
-ret		return T_RET;
-for		return T_FOR;
-if		return T_IF;
-print	return T_PRINT;
-while	return T_WHILE;
-do		return T_DO;
-else	return T_ELSE;
-true	return T_BOOL;
-false	return T_BOOL;
+"=="	{	
+			yylval.cval = yytext;	
+			return T_EQU;
+		}
+"!<"	{	
+			yylval.cval = yytext;	
+			return T_NLESS;
+		}
+"!>"	{	
+			yylval.cval = yytext;	
+			return T_NGREATER;
+		}
+"!="	{	
+			yylval.cval = yytext;	
+			return T_NEQU;
+		}
+"++"	{	
+			yylval.cval = yytext;	
+			return T_INC;
+		}
+"--"	{	
+			yylval.cval = yytext;	
+			return T_DEC;
+		}
+">"		{	
+			yylval.cval = yytext;	
+			return T_GREATER;
+		}
+"<"		{	
+			yylval.cval = yytext;	
+			return T_LESS;
+		}
+","		{	
+			yylval.cval = yytext;	
+			return T_COMMA;
+		}
+"="		{	
+			yylval.cval = yytext;	
+			return T_ASSIGN;
+		}
+";"		{	
+			yylval.cval = yytext;	
+			return T_SEMICOLON;
+		}
+"("		{	
+			yylval.cval = yytext;	
+			return T_LPAR;
+		}
+")"		{	
+			yylval.cval = yytext;	
+			return T_RPAR;
+		}
+"{"		{	
+			yylval.cval = yytext;	
+			return T_LBRACE;
+		}
+"}"		{	
+			yylval.cval = yytext;	
+			return T_RBRACE;
+		}
+"+"		{	
+			yylval.cval = yytext;	
+			return T_ADD;
+		}
+"-"		{	
+			yylval.cval = yytext;	
+			return T_SUB;
+		}
+"/"		{	
+			yylval.cval = yytext;	
+			return T_DIV;
+		}
+"*"		{	
+			yylval.cval = yytext;	
+			return T_MUL;
+		}
+fn		{	
+			yylval.cval = yytext;	
+			return T_FUNC;
+		}
+ret		{	
+			yylval.cval = yytext;	
+			return T_RET;
+		}
+for		{	
+			yylval.cval = yytext;	
+			return T_FOR;
+		}
+if		{	
+			yylval.cval = yytext;	
+			return T_IF;
+		}
+print		{	
+			yylval.cval = yytext;	
+			return T_PRINT;
+		}
+while	{	
+			yylval.cval = yytext;	
+			return T_WHILE;
+		}
+do		{	
+			yylval.cval = yytext;	
+			return T_DO;
+		}
+else	{	
+			yylval.cval = yytext;	
+			return T_ELSE;
+		}
+true	{	
+			yylval.cval = yytext;	
+			return T_BOOL;
+		}
+false	{	
+			yylval.cval = yytext;	
+			return T_BOOL;
+		}
 
 [a-zA-Z][a-zA-Z0-9]*	{
 							yylval.cval = yytext;	

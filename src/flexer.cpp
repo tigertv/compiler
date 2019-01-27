@@ -1,7 +1,7 @@
 #include <iostream>
 #include "flexer.h"
 
-// TODO: move it
+// TODO: remove it or change
 typedef union {
 	int ival;
 	char *cval;
@@ -28,117 +28,9 @@ std::vector<Token*>* Flexer::getTokens(std::string content) {
 			result->push_back(token);
 			break;
 
-		case T_ID:
+		default:
 			token->value = yylval.cval;
 			result->push_back(token);
-			break;
-
-		case T_FUNC:
-			token->value = "FUNC";
-			result->push_back(token);
-			break;
-
-		case T_RET:
-			token->value = "RET";
-			result->push_back(token);
-			break;
-
-		case T_DIV:
-			token->value = "/";
-			result->push_back(token);
-			break;
-
-		case T_MUL:
-			token->value = "*";
-			result->push_back(token);
-			break;
-
-		case T_SUB:
-			token->value = "-";
-			result->push_back(token);
-			break;
-
-		case T_ADD:
-			token->value = "+";
-			result->push_back(token);
-			break;
-
-		case T_LPAR:
-			token->value = "(";
-			result->push_back(token);
-			break;
-
-		case T_RPAR:
-			token->value = ")";
-			result->push_back(token);
-			break;
-
-		case T_LBRACE:
-			token->value = "{";
-			result->push_back(token);
-			break;
-
-		case T_RBRACE:
-			token->value = "}";
-			result->push_back(token);
-			break;
-
-		case T_ASSIGN:
-			token->value = "=";
-			result->push_back(token);
-			break;
-
-		case T_PRINT:
-			token->value = "PRINT";
-			result->push_back(token);
-			break;
-
-		case T_SEMICOLON:
-			token->value = ";";//std::to_string(yylval.ival);
-			result->push_back(token);
-			break;
-
-		case T_COMMA:
-			token->value = ",";
-			result->push_back(token);
-			break;
-
-		case T_IF:
-			token->value = "IF";
-			result->push_back(token);
-			break;
-
-		case T_LESS:
-			token->value = "LESS";
-			result->push_back(token);
-			break;
-
-		case T_NLESS:
-			token->value = "NLESS";
-			result->push_back(token);
-			break;
-
-		case T_GREATER:
-			token->value = "GREATER";
-			result->push_back(token);
-			break;
-
-		case T_NGREATER:
-			token->value = "NGREATER";
-			result->push_back(token);
-			break;
-
-		case T_EQU:
-			token->value = "EQU";
-			result->push_back(token);
-			break;
-
-		case T_NEQU:
-			token->value = "NEQU";
-			result->push_back(token);
-			break;
-
-		default:
 			break;
 		}
 
