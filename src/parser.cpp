@@ -61,29 +61,6 @@ Node* Parser::parse(std::vector<Token*> *tokens) {
 
 Node* Parser::statements() {
 
-	/*
-	Node* temp;
-	Token* token;
-	Node* node = nullptr;
-
-	do {
-		temp = node;
-
-		Node* st = statement();
-		if (st) {
-			node = new Node();
-			node->type = NodeType::N_SEQ;
-			node->value = "SEQ";
-
-			node->left = temp;
-			node->right = st;
-		}
-		token = getCurrentToken();
-	} while(token);
-	//*/
-
-	////////////////////////////////
-
 	Node* temp;
 	Node* node = nullptr;
 	Token* token = getCurrentToken();
