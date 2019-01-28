@@ -15,6 +15,32 @@ void CodeGenerator::compile(Node* ast) {
 	if (!ast) return;
 
 	switch(ast->type) {
+		case NodeType::N_LOOP:	{
+			Node* condition = ast->args;
+
+			outfile << "; LOOP COND" << endl;
+
+			if ( condition->type == NodeType::N_NUMBER_C || condition->type == NodeType::N_ID)
+				outfile << "mov eax, ";
+			compile(condition);
+			outfile << endl;
+			outfile << "mov ecx, eax" << endl;
+
+			int labelCount = ++this->label;
+
+			// block
+			outfile << ".L"<< labelCount << ": ; LOOP BEGIN" << endl;
+			outfile << "push ecx" << endl;
+
+			compile(ast->left);
+
+			outfile << "pop ecx" << endl;
+			outfile << "dec ecx" << endl;
+			outfile << "jnz .L"<< labelCount << " ; LOOP END" << endl;
+			outfile << endl;
+		}
+			break;
+
 		case NodeType::N_SEQ:
 			{
 				compile(ast->left);

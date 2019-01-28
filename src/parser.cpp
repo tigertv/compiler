@@ -91,6 +91,24 @@ Node* Parser::statement() {
 	}
 
 	switch(token->type) {
+		case TokenType::T_LOOP: {
+			token = nextToken();
+			if (!expect(TokenType::T_LPAR)) {
+				printError("A left parenthes expected in loop-statement.");
+			}
+
+			node = new Node();
+			node->type = NodeType::N_LOOP;
+			node->value = token->value;
+			node->args = expression();
+
+			if (!expect(TokenType::T_RPAR)) {
+				printError("A right parenthes expected in loop-statement.");
+			}
+
+			node->left = block();
+		}	
+			break;
 
 		case TokenType::T_FUNC: 
 			{

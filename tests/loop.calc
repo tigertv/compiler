@@ -1,0 +1,13 @@
+loop(2) {
+	print(1);
+}
+
+loop(4*4-6*2-1) {
+	print(2);
+}
+
+loop(5*4-8*2) {
+	print(3);
+}
+
+print(100);

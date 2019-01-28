@@ -132,9 +132,17 @@ if		{
 			yylval.cval = yytext;	
 			return T_IF;
 		}
-print		{	
+else	{	
+			yylval.cval = yytext;	
+			return T_ELSE;
+		}
+print	{	
 			yylval.cval = yytext;	
 			return T_PRINT;
+		}
+loop	{	
+			yylval.cval = yytext;	
+			return T_LOOP;
 		}
 while	{	
 			yylval.cval = yytext;	
@@ -143,10 +151,6 @@ while	{
 do		{	
 			yylval.cval = yytext;	
 			return T_DO;
-		}
-else	{	
-			yylval.cval = yytext;	
-			return T_ELSE;
 		}
 true	{	
 			yylval.cval = yytext;	

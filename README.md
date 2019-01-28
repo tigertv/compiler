@@ -5,6 +5,7 @@ Released:
 - functions, print function
 - calculation: addition, subtruction, multiplication, division
 - if-else (simple, ==, !=, <, !<, >, !>) 
+- loop(only calculated expression without variables)
 - only integers as operands and arguments for functions
 
 It uses `ld` and `nasm` as backend.
