@@ -25,7 +25,7 @@ j = 5;
 
 if(j > 5) {
 	print(21);
-} else if (j == 5) {
+} (j == 5) {
 	print(22);
 } else {
 	print(23);
@@ -35,7 +35,7 @@ j = 4;
 
 if(j > 5) {
 	print(31);
-} else if (j == 5) {
+} else (j == 5) {
 	print(32);
 } else {
 	print(33);

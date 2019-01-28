@@ -25,6 +25,7 @@ class Parser {
 	Node* factor();
 	Node* block();
 	Node* condition();
+	Node* conditionBlock();
 	Node* functionArgs();
 
 public:

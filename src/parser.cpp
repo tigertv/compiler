@@ -187,32 +187,8 @@ Node* Parser::statement() {
 			
 		case TokenType::T_IF: 
 			{
-				node = new Node();
-				node->type = NodeType::N_IF;
-				node->value = "IF";
 				nextToken();
-
-				if (!expect(TokenType::T_LPAR)) {
-					printError("A left parenthes expected in if-statement.");
-				} 
-
-				node->args = this->condition();
-				
-				if (!expect(TokenType::T_RPAR)) {
-					printError("A right parenthes expected in if-statement.");
-				} 
-
-				node->left = block();
-
-				if (expect(TokenType::T_ELSE)) {
-					Token* token = this->getCurrentToken();
-					if (token) { 
-						if (token->type == TokenType::T_IF) 
-							node->right = statement();
-						else 
-							node->right = block();
-					}
-				}
+				node = conditionBlock();
 			}
 			break;
 			
@@ -536,6 +512,42 @@ Node* Parser::condition() {
 
 	nextToken();
 	node->right = expression();
+
+	return node;
+}
+
+Node* Parser::conditionBlock() {
+
+	if (!expect(TokenType::T_LPAR)) {
+		printError("A left parenthes expected in condition-block.");
+	} 
+
+	Node* node = new Node();
+	node->type = NodeType::N_IF;
+	node->value = "IF";
+	node->args = this->condition();
+	
+	if (!expect(TokenType::T_RPAR)) {
+		printError("A right parenthes expected in condition-block.");
+	} 
+
+	node->left = block();
+
+	Token* token = getCurrentToken();
+
+	if (expect(TokenType::T_ELSE)) {
+		token = getCurrentToken();
+		if (token) { 
+			if (token->type == TokenType::T_LBRACE) 
+				node->right = block();
+			else if (token->type == TokenType::T_LPAR) 
+				node->right = conditionBlock();
+			else 
+				node->right = statement();
+		}
+	} else if (token->type == TokenType::T_LPAR) {
+		node->right = conditionBlock();
+	}
 
 	return node;
 }
