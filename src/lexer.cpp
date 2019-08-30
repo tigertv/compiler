@@ -3,6 +3,8 @@
 
 Lexer::Lexer() {
 	this->inToken = false;
+	this->position = 0;
+	this->token = nullptr;
 }
 
 void Lexer::checkID() {
@@ -35,10 +37,6 @@ std::vector<Token*>* Lexer::getTokens(std::string content) {
  
 	std::vector<Token*> *result = new std::vector<Token*>();
 	this->position = 0;
-
-	//std::string breaksymbols[] = {"ddd","dss"};
-	//std::string reservedWords[] = {"if","else", "while", "print"};
-	//std::vector<std::string> symbolTable;
 
 	std::string temp = "";
 	int size = content.length();

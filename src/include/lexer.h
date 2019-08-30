@@ -7,12 +7,15 @@
 #include "token.h"
 
 class Lexer : public ILexer {
+private:
 	bool inToken;
 	Token *token;
 	void checkID();
 	int position;
+
 public:
 	Lexer();
+	virtual ~Lexer() {};
 	std::vector<Token*>* getTokens(std::string content);
 };
 

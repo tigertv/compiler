@@ -2,7 +2,7 @@
 #include "parser.h"
 
 Parser::Parser() {
-
+	this->t = nullptr;
 }
 
 Token* Parser::nextToken() {

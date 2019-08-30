@@ -2,11 +2,13 @@
 #include <fstream>
 #include <string>
 #include <list>
-#include "lexer.h"
+//#include "lexer.h"
 #include "flexer.h"
 #include "parser.h"
 #include "ILexer.h"
 #include "CodeGenerator.h"
+
+using namespace std;
 
 std::string readFile(std::string fileName) {
 	std::string line;
@@ -24,8 +26,8 @@ std::string readFile(std::string fileName) {
 }
 
 void traverse(Node* node) {
-	using namespace std;
 	
+
 	cout << "type: " << node->type << ", value: " << node->value << endl;
 	if (node->left) traverse(node->left);
 	if (node->right) traverse(node->right);

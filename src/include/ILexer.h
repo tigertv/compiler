@@ -8,6 +8,7 @@
 struct ILexer
 {
 	virtual std::vector<Token*>* getTokens(std::string content) = 0;
+	virtual ~ILexer() {};
 };
 
 #endif
