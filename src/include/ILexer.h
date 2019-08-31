@@ -3,7 +3,8 @@
 
 #include <vector>
 #include <string>
-#include "token.h"
+
+#include "Token.h"
 
 struct ILexer
 {

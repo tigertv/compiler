@@ -3,10 +3,9 @@
 
 #include <vector>
 #include <string>
-#include "token.h"
-//#include "../flex/clexer.h"
 #include "clexer.h"
 #include "ILexer.h"
+#include "Token.h"
 
 class Flexer : public ILexer {
 public:

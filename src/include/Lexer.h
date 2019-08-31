@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include "ILexer.h"
-#include "token.h"
+#include "Token.h"
 
 class Lexer : public ILexer {
 private:

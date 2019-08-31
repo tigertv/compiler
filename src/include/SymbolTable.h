@@ -3,7 +3,8 @@
 
 #include <vector>
 #include <string>
-#include "token.h"
+
+#include "Token.h"
 
 class SymbolTable {
 	std::vector<std::string> symbols;

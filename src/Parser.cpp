@@ -1,5 +1,6 @@
+#include "include/Parser.h"
+
 #include <iostream>
-#include "parser.h"
 
 Parser::Parser() {
 	this->t = nullptr;

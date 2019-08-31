@@ -1,7 +1,7 @@
 %{
 	#include <stdio.h>
 	#include <sstream>
-	#include "../include/token.h"
+	#include "../include/Token.h"
 
 	typedef union{
 		int ival;

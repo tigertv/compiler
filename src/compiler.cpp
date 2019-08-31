@@ -1,10 +1,10 @@
+#include <Flexer.h>
+#include <Parser.h>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <list>
 //#include "lexer.h"
-#include "flexer.h"
-#include "parser.h"
 #include "ILexer.h"
 #include "CodeGenerator.h"
 

@@ -1,5 +1,6 @@
+#include "include/Flexer.h"
+
 #include <iostream>
-#include "flexer.h"
 
 // TODO: remove it or change
 typedef union {

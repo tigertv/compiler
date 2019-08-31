@@ -3,9 +3,10 @@
 
 #include <vector>
 #include <string>
-#include "token.h"
-#include "node.h"
+
+#include "Node.h"
 #include "SymbolTable.h"
+#include "Token.h"
 
 class Parser {
 	std::vector<Token*> *t;

@@ -4,7 +4,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include "node.h"
+
+#include "Node.h"
 #include "SymbolTable.h"
 
 class CodeGenerator{

@@ -1,5 +1,6 @@
 #include <iostream>
-#include "lexer.h"
+
+#include "include/Lexer.h"
 
 Lexer::Lexer() {
 	this->inToken = false;
