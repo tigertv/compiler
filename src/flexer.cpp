@@ -18,10 +18,11 @@ std::vector<Token*>* Flexer::getTokens(std::string content) {
 	int p = 0;
 	Token *token; 
 
-	YY_BUFFER_STATE buffer = yy_scan_string(content.c_str());
-	while(p = yylex()) {
+	YY_BUFFER_STATE buff = yy_scan_string(content.c_str());
+	while( (p = yylex()) != 0) {
 		token = new Token();
 		token->type = (TokenType)p;
+
 		switch(p) {
 		case T_NUMBER:
 			token->value = std::to_string(yylval.ival);
@@ -34,11 +35,11 @@ std::vector<Token*>* Flexer::getTokens(std::string content) {
 			break;
 		}
 
-		yylval.cval = "";
+		yylval.cval = (char*)"";
 		yylval.ival = 0;
 	}
 
-	yy_delete_buffer(buffer);
+	yy_delete_buffer(buff);
 
 	return result;
 }

@@ -14,6 +14,7 @@
 	char* commentStart;
 %}
 
+%option nounput
 %option yylineno
 %option noyywrap
 %x COMMENT_MULTI

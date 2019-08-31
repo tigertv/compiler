@@ -26,8 +26,6 @@ std::string readFile(std::string fileName) {
 }
 
 void traverse(Node* node) {
-	
-
 	cout << "type: " << node->type << ", value: " << node->value << endl;
 	if (node->left) traverse(node->left);
 	if (node->right) traverse(node->right);
@@ -55,7 +53,7 @@ int main(int argc, char* argv[]) {
 	Flexer lexer;
 	vector<Token*> *tokens = lexer.getTokens(content);
 	
-	for (int i=0;i<tokens->size();i++) {
+	for (unsigned long int i=0; i < tokens->size(); i++) {
 		cout << tokens->at(i)->type << " " << tokens->at(i)->value << endl;
 	}
 

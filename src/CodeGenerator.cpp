@@ -428,76 +428,78 @@ void CodeGenerator::compile(Node* ast) {
 			break;
 
 		case NodeType::N_PROG:
-			this->currentFunction = ast;
-			this->currentSymbolTable = ast->symbolTable;
-			// prologue
-			outfile << "BITS 32" << endl;
-			outfile << "global _start" << endl;
-			//outfile << "extern printf" << endl;
-			outfile << endl;
-
-			//outfile << "section .data" << endl;
-			//outfile << "message2 db \"%d\",10,0" << endl;
-			//outfile << "msg TIMES 20 db 0" << endl;
-			//outfile << "msg2 db 0" << endl;
-			//outfile << "len	equ $-msg " << endl;
-			//outfile << "section .bss" << endl;
-			//outfile << "msg resb 40" << endl;
-			//outfile << "msg2 resb 0" << endl;
-			outfile << endl;
-
-			outfile << "section .text" << endl;
-
-			outfile << ";==== FUNCTIONS ======" << endl;
-			compile(ast->right);
-			outfile << ";==== FUNCTIONS ======" << endl;
-
-			outfile << "_start:" << endl << endl;
-
-				SymbolTable *temp = this->currentSymbolTable;
+			{
+				this->currentFunction = ast;
 				this->currentSymbolTable = ast->symbolTable;
+				// prologue
+				outfile << "BITS 32" << endl;
+				outfile << "global _start" << endl;
+				//outfile << "extern printf" << endl;
+				outfile << endl;
 
-				outfile << "push ebp" << endl;
-				outfile << "mov ebp, esp" << endl;
-				outfile << "sub esp, " << 4 * this->currentSymbolTable->getSize() << endl;
+				//outfile << "section .data" << endl;
+				//outfile << "message2 db \"%d\",10,0" << endl;
+				//outfile << "msg TIMES 20 db 0" << endl;
+				//outfile << "msg2 db 0" << endl;
+				//outfile << "len	equ $-msg " << endl;
+				//outfile << "section .bss" << endl;
+				//outfile << "msg resb 40" << endl;
+				//outfile << "msg2 resb 0" << endl;
+				outfile << endl;
 
-				compile(ast->left);
+				outfile << "section .text" << endl;
 
-				outfile << "leave" << endl;
-				this->currentSymbolTable = temp;
+				outfile << ";==== FUNCTIONS ======" << endl;
+				compile(ast->right);
+				outfile << ";==== FUNCTIONS ======" << endl;
 
-			// exit
-			outfile << "mov eax, 1" << endl;
-			outfile << "xor ebx, ebx" << endl;
-			outfile << "int 0x80" << endl;
-			outfile << endl;
+				outfile << "_start:" << endl << endl;
 
-			// print function : prints a decimal number in eax register with a new line
-			outfile << "print:" << endl;
-			outfile << "mov edi, 1" << endl;
-			outfile << "mov ecx, esp" << endl;
-			outfile << "mov ebx, 10" << endl;
-			outfile << "dec ecx" << endl;
-			outfile << "mov [ecx], bl" << endl;
+					SymbolTable *temp = this->currentSymbolTable;
+					this->currentSymbolTable = ast->symbolTable;
 
-			outfile << "print_loop:" << endl;
-			outfile << "xor edx, edx" << endl;
-			outfile << "idiv ebx" << endl;
-			outfile << "add dl, '0'" << endl;
-			outfile << "dec ecx" << endl;
-			outfile << "inc edi" << endl;
-			outfile << "mov [ecx],dl" << endl;
-			outfile << "test eax, eax" << endl;
-			outfile << "jnz print_loop" << endl;
+					outfile << "push ebp" << endl;
+					outfile << "mov ebp, esp" << endl;
+					outfile << "sub esp, " << 4 * this->currentSymbolTable->getSize() << endl;
 
-			outfile << "mov eax, 4" << endl;
-			outfile << "mov ebx, 1" << endl;
-			outfile << "mov edx, edi" << endl;
-			outfile << "int 0x80" << endl;
+					compile(ast->left);
 
-			outfile << "ret" << endl;
+					outfile << "leave" << endl;
+					this->currentSymbolTable = temp;
 
-		/*
+				// exit
+				outfile << "mov eax, 1" << endl;
+				outfile << "xor ebx, ebx" << endl;
+				outfile << "int 0x80" << endl;
+				outfile << endl;
+
+				// print function : prints a decimal number in eax register with a new line
+				outfile << "print:" << endl;
+				outfile << "mov edi, 1" << endl;
+				outfile << "mov ecx, esp" << endl;
+				outfile << "mov ebx, 10" << endl;
+				outfile << "dec ecx" << endl;
+				outfile << "mov [ecx], bl" << endl;
+
+				outfile << "print_loop:" << endl;
+				outfile << "xor edx, edx" << endl;
+				outfile << "idiv ebx" << endl;
+				outfile << "add dl, '0'" << endl;
+				outfile << "dec ecx" << endl;
+				outfile << "inc edi" << endl;
+				outfile << "mov [ecx],dl" << endl;
+				outfile << "test eax, eax" << endl;
+				outfile << "jnz print_loop" << endl;
+
+				outfile << "mov eax, 4" << endl;
+				outfile << "mov ebx, 1" << endl;
+				outfile << "mov edx, edi" << endl;
+				outfile << "int 0x80" << endl;
+
+				outfile << "ret" << endl;
+			}
+			break;
+		//*
 		default:
 			break;
 		//*/
