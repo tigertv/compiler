@@ -5,5 +5,5 @@ flex_target(lexer flex/1.l  ${CMAKE_CURRENT_BINARY_DIR}/lex.yy.cpp
 )
 
 set(APP compiler)
-include_directories(${APP} PUBLIC include ${CMAKE_CURRENT_BINARY_DIR})
+include_directories(include ${CMAKE_CURRENT_BINARY_DIR})
 add_executable(${APP} ${APP}.cpp CodeGenerator.cpp Flexer.cpp Parser.cpp SymbolTable.cpp ${FLEX_lexer_OUTPUTS})
