@@ -8,8 +8,6 @@
 #include "ILexer.h"
 #include "CodeGenerator.h"
 
-using namespace std;
-
 std::string readFile(std::string fileName) {
 	std::string line;
 	std::string content;
@@ -26,7 +24,7 @@ std::string readFile(std::string fileName) {
 }
 
 void traverse(Node* node) {
-	cout << "type: " << node->type << ", value: " << node->value << endl;
+	std::cout << "type: " << node->type << ", value: " << node->value << std::endl;
 	if (node->left) traverse(node->left);
 	if (node->right) traverse(node->right);
 }
@@ -35,7 +33,7 @@ int main(int argc, char* argv[]) {
 	using namespace std;
 
     if (argc < 3) {
-        std::cerr << "Usage: " << argv[0] << " infile.calc outfile.asm" << std::endl;
+        cerr << "Usage: " << argv[0] << " infile.calc outfile.asm" << endl;
         return 1;
     }
     // Print the user's name:
